@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.voctrainer.frontend.main.fragment.MainFragment"
+        android:label="main_fragment"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_main_voc"
+            app:destination="@id/vocFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit" />
+        <action
+            android:id="@+id/action_main_setting"
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit" />
+        <action
+            android:id="@+id/action_main_practise"
+            app:destination="@id/practiseFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit" />
+    </fragment>
+    <fragment
+        android:id="@+id/vocFragment"
+        android:name="com.example.voctrainer.frontend.voc.fragment.VocFragment"
+        android:label="fragment_voc"
+        tools:layout="@layout/fragment_voc" >
+        <action
+            android:id="@+id/action_voc_main"
+            app:destination="@id/mainFragment" />
+        <argument
+            android:name="position"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <action
+            android:id="@+id/action_voc_setting"
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit" />
+        <action
+            android:id="@+id/action_voc_practise"
+            app:destination="@id/practiseFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.voctrainer.frontend.settings.fragments.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" >
+        <argument
+            android:name="source"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <action
+            android:id="@+id/action_setting_voc"
+            app:destination="@id/vocFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit" />
+        <action
+            android:id="@+id/action_setting_main"
+            app:destination="@id/mainFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit" />
+    </fragment>
+    <fragment
+        android:id="@+id/practiseFragment"
+        android:name="com.example.voctrainer.frontend.practise.fragments.PractiseFragment"
+        android:label="PractiseFragment"
+        tools:layout="@layout/fragment_practise">
+        <action
+            android:id="@+id/action_practise_result"
+            app:destination="@id/practiseResultFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/practiseResultFragment"
+        android:name="com.example.voctrainer.frontend.practise.fragments.ResultFragment"
+        android:label="PractiseResultFragment"
+        tools:layout="@layout/fragment_practise_result">
+        <action
+            android:id="@+id/action_result_voc"
+            app:destination="@id/vocFragment" />
+        <action
+            android:id="@+id/action_result_practise"
+            app:destination="@id/practiseFragment" />
+    </fragment>
+</navigation>

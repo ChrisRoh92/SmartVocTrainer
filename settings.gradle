@@ -1,0 +1,2 @@
+rootProject.name='VocTrainer'
+include ':app'

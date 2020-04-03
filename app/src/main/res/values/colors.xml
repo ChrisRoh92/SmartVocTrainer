@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#607d8b</color>
+    <color name="colorPrimaryDark">#34515e</color>
+    <color name="colorPrimaryLight">#8eacbb</color>
+    <color name="colorAccent">#64dd17</color>
+
+
+
+    <!--Background -->
+    <color name="background">#EEEEEE</color>
+    <color name="background_cardview">#ffffff</color>
+
+    <!--Text -->
+    <color name="text_main">#111111</color>
+    <color name="text_sub">#aaaaaa</color>
+    <color name="text_sub2">#acacac</color>
+
+    <!-- Divider -->
+    <color name="divider">@color/colorPrimary</color>
+
+
+
+</resources>
