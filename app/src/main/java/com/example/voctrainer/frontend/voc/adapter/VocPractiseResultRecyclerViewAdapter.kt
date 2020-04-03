@@ -33,6 +33,9 @@ class VocPractiseResultRecyclerViewAdapter(var content:ArrayList<String>):
     override fun onBindViewHolder(holder: ViewHolder, position: Int)
     {
         setIcon(Random.nextBoolean(),holder.imageCircle,holder.imageIcon)
+        holder.itemView.setOnClickListener {
+
+        }
 
     }
 

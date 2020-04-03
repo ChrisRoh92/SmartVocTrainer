@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Vokabelheft importieren"
+                android:text="Vokabeln importieren"
                 android:textColor="@color/text_main"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +42,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="Klicke auf die Schaltfläche um ein Heft zu importieren"
+                android:text="Klicke auf die Schaltfläche um weitere Vokabeln zu importieren"
                 android:textColor="@color/text_sub"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -62,7 +62,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView22" />
 
             <FrameLayout
-                android:id="@+id/dialog_import_framelayout"
+                android:id="@+id/dialog_voc_import_framelayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -95,10 +95,10 @@
                 android:background="?android:attr/listDivider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dialog_import_framelayout" />
+                app:layout_constraintTop_toBottomOf="@+id/dialog_voc_import_framelayout" />
 
             <Button
-                android:id="@+id/dialog_import_btn_import"
+                android:id="@+id/dialog_voc_import_btn_import"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -111,14 +111,14 @@
                 app:layout_constraintTop_toBottomOf="@+id/divider15" />
 
             <Button
-                android:id="@+id/dialog_import_btn_abort"
+                android:id="@+id/dialog_voc_import_btn_abort"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:text="Abbrechen"
-                app:layout_constraintEnd_toStartOf="@+id/dialog_import_btn_import"
-                app:layout_constraintTop_toTopOf="@+id/dialog_import_btn_import" />
+                app:layout_constraintEnd_toStartOf="@+id/dialog_voc_import_btn_import"
+                app:layout_constraintTop_toTopOf="@+id/dialog_voc_import_btn_import" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

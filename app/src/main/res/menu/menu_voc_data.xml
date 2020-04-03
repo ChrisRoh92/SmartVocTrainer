@@ -3,13 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/menu_voc_data_search"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="Search"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/menu_voc_import"
         android:icon="@drawable/ic_file_download_black_24dp"
         android:title="Import"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/menu_voc_export"
-        android:icon="@drawable/ic_share_black_24dp"
-        android:title="Item"
-        app:showAsAction="always" />
+        android:title="Export" />
 </menu>

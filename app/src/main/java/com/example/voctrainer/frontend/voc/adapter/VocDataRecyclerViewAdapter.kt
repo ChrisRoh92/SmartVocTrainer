@@ -29,6 +29,9 @@ class VocDataRecyclerViewAdapter(var content:ArrayList<String>):
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.itemView.setOnClickListener {
+
+        }
 
     }
 

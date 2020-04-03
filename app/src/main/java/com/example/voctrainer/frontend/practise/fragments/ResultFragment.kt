@@ -57,7 +57,8 @@ class ResultFragment(): Fragment()
         {
             rvDetails = rootView.findViewById(R.id.fragment_result_rv_main)
             layoutManagerDetails = LinearLayoutManager(rootView.context, RecyclerView.VERTICAL,false)
-            adapterDetails = ResultMainRecyclerViewAdapter(4)
+            adapterDetails = ResultMainRecyclerViewAdapter(arrayListOf("34","6","85 %","4:15"),
+                arrayListOf(0,14,-20,-94))
             rvDetails.layoutManager = layoutManagerDetails
             rvDetails.adapter = adapterDetails
         }

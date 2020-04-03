@@ -18,7 +18,6 @@ class VocStateAdapter(var fragment: Fragment) : FragmentStateAdapter(fragment)
     }
 
     override fun createFragment(position: Int): Fragment {
-        Toast.makeText(fragment.context,"createFragment() $position", Toast.LENGTH_SHORT).show()
         return fragments[position]
     }
 

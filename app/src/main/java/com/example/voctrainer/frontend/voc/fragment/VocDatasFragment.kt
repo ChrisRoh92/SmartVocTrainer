@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.voctrainer.R
 import com.example.voctrainer.frontend.main.adapter.MainRecyclerViewAdapter
 import com.example.voctrainer.frontend.voc.adapter.VocDataRecyclerViewAdapter
+import com.example.voctrainer.frontend.voc.dialogs.DialogNewVocData
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class VocDatasFragment: Fragment()
 {
@@ -22,15 +24,35 @@ class VocDatasFragment: Fragment()
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var adapter: VocDataRecyclerViewAdapter
 
+    // View Elemente:
+    private lateinit var fabAdd:FloatingActionButton
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         rootView =  inflater.inflate(R.layout.fragment_voc_data, container, false)
-        Toast.makeText(rootView.context,"Position Nr: ${arguments?.getInt("position")}", Toast.LENGTH_SHORT).show()
+        initViews()
         initFragments()
         return rootView
     }
+
+
+    private fun initViews()
+    {
+        fabAdd = rootView.findViewById(R.id.fragment_voc_datas_fab)
+        fabAdd.setOnClickListener {
+            var dialog = DialogNewVocData()
+            dialog.show(childFragmentManager,"")
+            dialog.setOnDialogClickListener(object:DialogNewVocData.OnDialogClickListener{
+                override fun setOnDialogClickListener(vocNative: String, vocForeign: String) {
+
+                }
+
+            })
+        }
+    }
+
 
     private fun initFragments()
     {
