@@ -14,6 +14,6 @@
         android:title="Import"
         app:showAsAction="never" />
     <item
-        android:id="@+id/menu_voc_export"
+        android:id="@+id/menu_voc_settings"
         android:title="Export" />
 </menu>

@@ -51,6 +51,12 @@ class VocPractiseFragment: Fragment()
         adapterResult = VocPractiseResultRecyclerViewAdapter(arrayListOf("","","","","","","","","","","","","","","","","","","","","","","","","","",""))
         rvResults.layoutManager = managerResult
         rvResults.adapter = adapterResult
+        adapterResult.setOnItemClickListener(object:VocPractiseResultRecyclerViewAdapter.OnItemClickListener{
+            override fun setOnItemClickListener(pos: Int) {
+                findNavController().navigate(R.id.action_voc_result)
+            }
+
+        })
 
     }
 }

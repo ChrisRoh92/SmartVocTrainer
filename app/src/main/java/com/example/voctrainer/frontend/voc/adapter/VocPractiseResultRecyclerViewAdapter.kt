@@ -14,6 +14,8 @@ class VocPractiseResultRecyclerViewAdapter(var content:ArrayList<String>):
     RecyclerView.Adapter<VocPractiseResultRecyclerViewAdapter.ViewHolder>() {
 
 
+    // Interface:
+    private lateinit var mListener:OnItemClickListener
 
 
 
@@ -34,7 +36,7 @@ class VocPractiseResultRecyclerViewAdapter(var content:ArrayList<String>):
     {
         setIcon(Random.nextBoolean(),holder.imageCircle,holder.imageIcon)
         holder.itemView.setOnClickListener {
-
+            mListener.setOnItemClickListener(holder.adapterPosition)
         }
 
     }
@@ -71,5 +73,14 @@ class VocPractiseResultRecyclerViewAdapter(var content:ArrayList<String>):
         var imageIcon:ImageView = itemView.findViewById(R.id.item_voc_practise_result_image_icon)
         // ImageButton:
         var btnRepeat:ImageButton = itemView.findViewById(R.id.item_voc_practise_result_btn_repeat)
+    }
+
+    interface OnItemClickListener
+    {
+        fun setOnItemClickListener(pos:Int)
+    }
+    fun setOnItemClickListener(mListener:OnItemClickListener)
+    {
+        this.mListener = mListener
     }
 }

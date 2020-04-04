@@ -3,13 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_voc_import"
-        android:icon="@drawable/ic_file_download_black_24dp"
-        android:title="Import"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/menu_voc_export"
-        android:icon="@drawable/ic_share_black_24dp"
+        android:id="@+id/menu_voc_settings"
+        android:icon="@drawable/ic_settings_black_24dp"
         android:title="Item"
         app:showAsAction="always" />
 </menu>

@@ -13,7 +13,8 @@ class VocDataRecyclerViewAdapter(var content:ArrayList<String>):
 
 
 
-
+    // Interface
+    private lateinit var mListener:OnItemClickListener
 
 
 
@@ -30,7 +31,10 @@ class VocDataRecyclerViewAdapter(var content:ArrayList<String>):
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.itemView.setOnClickListener {
-
+            if(mListener!=null)
+            {
+                mListener.setOnItemClickListener(holder.adapterPosition)
+            }
         }
 
     }
@@ -43,5 +47,14 @@ class VocDataRecyclerViewAdapter(var content:ArrayList<String>):
         var tvSubtitle:TextView = itemView.findViewById(R.id.item_voc_content_tv_title)
         var tvDate:TextView = itemView.findViewById(R.id.item_voc_content_tv_title)
         var image:ImageView = itemView.findViewById(R.id.item_voc_content_image)
+    }
+
+    interface OnItemClickListener
+    {
+        fun setOnItemClickListener(pos:Int)
+    }
+    fun setOnItemClickListener(mListener:OnItemClickListener)
+    {
+        this.mListener = mListener
     }
 }
