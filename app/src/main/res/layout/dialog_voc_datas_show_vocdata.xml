@@ -192,7 +192,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:text="Abbrechen"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/dialog_voc_showvocdata_btn_save_finish"
                 app:layout_constraintEnd_toStartOf="@+id/dialog_voc_showvocdata_btn_save_finish"
                 app:layout_constraintTop_toTopOf="@+id/dialog_voc_showvocdata_btn_save_finish" />
 

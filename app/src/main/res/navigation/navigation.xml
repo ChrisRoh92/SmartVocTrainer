@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.voctrainer.frontend.main.fragment.MainFragment"
+        android:name="com.example.voctrainer.moduls.main.fragment.MainFragment"
         android:label="main_fragment"
         tools:layout="@layout/fragment_main" >
         <action
@@ -20,43 +20,28 @@
             app:destination="@id/settingsFragment"
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit" />
-        <action
-            android:id="@+id/action_main_practise"
-            app:destination="@id/practiseFragment"
-            app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_fade_exit" />
     </fragment>
     <fragment
         android:id="@+id/vocFragment"
-        android:name="com.example.voctrainer.frontend.voc.fragment.VocFragment"
+        android:name="com.example.voctrainer.moduls.voc.fragment.VocFragment"
         android:label="fragment_voc"
         tools:layout="@layout/fragment_voc" >
         <action
             android:id="@+id/action_voc_main"
             app:destination="@id/mainFragment" />
         <argument
-            android:name="position"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:name="bookId"
+            app:argType="long"
+            android:defaultValue="0L" />
         <action
             android:id="@+id/action_voc_setting"
             app:destination="@id/settingsFragment"
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit" />
-        <action
-            android:id="@+id/action_voc_practise"
-            app:destination="@id/practiseFragment"
-            app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_fade_exit" />
-        <action
-            android:id="@+id/action_voc_result"
-            app:destination="@id/practiseResultFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.voctrainer.frontend.settings.fragments.SettingsFragment"
+        android:name="com.example.voctrainer.moduls.settings.fragments.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" >
         <argument
@@ -74,25 +59,31 @@
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit" />
     </fragment>
-    <fragment
-        android:id="@+id/practiseFragment"
-        android:name="com.example.voctrainer.frontend.practise.fragments.PractiseFragment"
-        android:label="PractiseFragment"
-        tools:layout="@layout/fragment_practise">
-        <action
-            android:id="@+id/action_practise_result"
-            app:destination="@id/practiseResultFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/practiseResultFragment"
-        android:name="com.example.voctrainer.frontend.practise.fragments.ResultFragment"
-        android:label="PractiseResultFragment"
-        tools:layout="@layout/fragment_practise_result">
-        <action
-            android:id="@+id/action_result_voc"
-            app:destination="@id/vocFragment" />
-        <action
-            android:id="@+id/action_result_practise"
-            app:destination="@id/practiseFragment" />
-    </fragment>
+    <navigation
+        android:id="@+id/nested_practise"
+        app:startDestination="@id/practiseFragment" >
+        <fragment
+            android:id="@+id/practiseFragment"
+            android:name="com.example.voctrainer.moduls.practise.fragments.PractiseFragment"
+            android:label="PractiseFragment"
+            tools:layout="@layout/fragment_practise">
+            <action
+                android:id="@+id/action_practise_result"
+                app:destination="@id/practiseResultFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/practiseResultFragment"
+            android:name="com.example.voctrainer.moduls.practise.fragments.ResultFragment"
+            android:label="PractiseResultFragment"
+            tools:layout="@layout/fragment_practise_result">
+            <action
+                android:id="@+id/action_result_voc"
+                app:destination="@id/vocFragment" />
+            <action
+                android:id="@+id/action_result_practise"
+                app:destination="@id/practiseFragment" />
+        </fragment>
+        <action android:id="@+id/action_global_result" app:destination="@id/practiseResultFragment" />
+    </navigation>
+    <action android:id="@+id/action_global_nested_practise" app:destination="@id/nested_practise" />
 </navigation>

@@ -30,7 +30,8 @@
                 style="@style/Widget.AppCompat.EditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:background="@null"
                 android:ems="10"
                 android:hint="Hier Vokabel eintragen"
@@ -50,7 +51,7 @@
                 android:text="Fremdsprache"
                 android:textColor="@color/text_main"
                 android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="@+id/divider29"
+                app:layout_constraintStart_toStartOf="@+id/dialog_voc_newvocdata_et_foreign"
                 app:layout_constraintTop_toBottomOf="@+id/divider29" />
 
             <View
@@ -60,7 +61,7 @@
                 android:background="?android:attr/listDivider"
                 app:layout_constraintEnd_toEndOf="@+id/divider28"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/textView46"
+                app:layout_constraintStart_toStartOf="@+id/dialog_voc_newvocdata_et_foreign"
                 app:layout_constraintTop_toBottomOf="@+id/dialog_voc_newvocdata_et_foreign" />
 
             <TextView
@@ -117,7 +118,7 @@
                 android:text="Muttersprache"
                 android:textColor="@color/text_main"
                 android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="@+id/dialog_voc_showvocdata_et_native"
+                app:layout_constraintStart_toStartOf="@+id/dialog_voc_newvocdata_et_native"
                 app:layout_constraintTop_toBottomOf="@+id/divider28" />
 
             <EditText
@@ -144,9 +145,8 @@
                 android:layout_height="1dp"
                 android:background="?android:attr/listDivider"
                 app:layout_constraintEnd_toEndOf="@+id/textView46"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/textView46"
-                app:layout_constraintTop_toBottomOf="@+id/dialog_voc_showvocdata_et_native" />
+                app:layout_constraintStart_toStartOf="@+id/dialog_voc_newvocdata_et_native"
+                app:layout_constraintTop_toBottomOf="@+id/dialog_voc_newvocdata_et_native" />
 
             <Button
                 android:id="@+id/dialog_voc_newvocdata_btn_save_next"
@@ -164,9 +164,8 @@
                 android:id="@+id/dialog_voc_newvocdata_btn_delete_native"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginEnd="8dp"
                 android:background="?android:attr/selectableItemBackground"
-                app:layout_constraintBottom_toBottomOf="@+id/dialog_voc_showvocdata_et_native"
+                app:layout_constraintBottom_toBottomOf="@+id/dialog_voc_newvocdata_et_native"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="@+id/divider11"
                 app:layout_constraintTop_toTopOf="@+id/dialog_voc_newvocdata_et_native"

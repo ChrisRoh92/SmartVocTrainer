@@ -6,6 +6,6 @@
 
 
     <!-- Ab hier alle Strings für das Main-Module -->
-    <string name="main_toolbar_title">Vokabelheft</string>
+    <string name="main_toolbar_title">Vocabulary Book</string>
 
 </resources>
