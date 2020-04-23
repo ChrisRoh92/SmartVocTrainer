@@ -2,74 +2,58 @@ package com.example.voctrainer.moduls.main.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
+import com.example.voctrainer.backend.database.dao.VocDao
 import com.example.voctrainer.backend.database.database.BookDatabase
+import com.example.voctrainer.backend.database.database.VocDataBase
 import com.example.voctrainer.backend.database.entities.Book
+import com.example.voctrainer.backend.database.entities.BookWithVocs
+import com.example.voctrainer.backend.repository.MainRepository
 import com.example.voctrainer.createCurrentTimeStamp
 import kotlinx.coroutines.*
 
 class MainViewModel(application: Application) : AndroidViewModel(application)
 {
 
-    private var db:BookDatabase =
-        Room.databaseBuilder(application.applicationContext,BookDatabase::class.java,"book_datebase").build()
-    private var bookDao = db.bookDao()
+    // Repository
+    private val mainRep = MainRepository(context = application.applicationContext)
 
     // Coroutine Stuff:
     private var viewModelJob = Job()
     private var uiScope = CoroutineScope(Dispatchers.Main+viewModelJob)
 
     // Alle Bücher:
-    var books = bookDao.getAllBooks()
+    var books: LiveData<List<Book>> = mainRep.getBooks()
 
 
-    fun onAddBook(name: String)
+
+    fun onAddBook(name:String)
     {
         uiScope.launch {
-            insert(Book(0,name,createCurrentTimeStamp()))
+            mainRep.insertNewBook(Book(0,name,createCurrentTimeStamp(),0,0,0))
         }
     }
-
     fun onUpdateBook(book:Book)
     {
         uiScope.launch {
-            update(book)
+            mainRep.updateBook(book)
         }
     }
-
     fun onDeleteBook(book:Book)
     {
         uiScope.launch {
-            delete(book)
+            mainRep.deleteBook(book)
         }
     }
 
 
 
 
-    private suspend fun insert(book: Book)
-    {
-        withContext(Dispatchers.IO)
-        {
-            bookDao.insert(book)
-        }
-    }
 
-    private suspend fun update(book: Book)
-    {
-        withContext(Dispatchers.IO)
-        {
-            bookDao.updateBook(book)
-        }
-    }
 
-    private suspend fun delete(book:Book)
-    {
-        withContext(Dispatchers.IO)
-        {
-            bookDao.deleteBook(book)
-        }
-    }
+
 
 
 

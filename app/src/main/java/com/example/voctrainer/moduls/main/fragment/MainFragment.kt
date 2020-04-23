@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.SearchEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 
@@ -23,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.voctrainer.R
 import com.example.voctrainer.backend.database.entities.Book
 import com.example.voctrainer.moduls.main.adapter.MainRecyclerViewAdapter
+import com.example.voctrainer.moduls.main.adapter.MainRecyclerViewListAdapter
 import com.example.voctrainer.moduls.main.dialogs.DialogImportVoc
 import com.example.voctrainer.moduls.main.dialogs.DialogNewVoc
 import com.example.voctrainer.moduls.main.viewmodel.MainViewModel
@@ -37,7 +40,7 @@ class MainFragment : Fragment() {
     // RecyclerView-Stuff:
     private lateinit var rv:RecyclerView
     private lateinit var layoutManager: LinearLayoutManager
-    private lateinit var adapter:MainRecyclerViewAdapter
+    private lateinit var adapter:MainRecyclerViewListAdapter
 
     // NavController
     private lateinit var navController: NavController
@@ -47,6 +50,9 @@ class MainFragment : Fragment() {
 
     // Fab Button
     private lateinit var fabAddVoc:FloatingActionButton
+
+    // Status
+    private var deleteBtnWasPushed = false
 
 
 
@@ -60,12 +66,27 @@ class MainFragment : Fragment() {
         initRecyclerView()
 
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        viewModel.books.observe(viewLifecycleOwner, Observer { books ->
-            adapter.updateContent(ArrayList(books))
+        viewModel.books!!.observe(viewLifecycleOwner, Observer { books ->
+            adapter.submitList(books)
+            adapter.submitList(books) {
+                /*layoutManager.smoothScrollToPosition(rv,null,0)*/
+                if(!deleteBtnWasPushed)
+                {
+                    rv.scrollToPosition(0)
+                }
+                else
+                {
+                    deleteBtnWasPushed = false
+                }
+
+            }
+
+
         })
 
 
         navController = findNavController()
+
         initToolBar()
 
         initFab()
@@ -82,11 +103,14 @@ class MainFragment : Fragment() {
     {
         rv = rootView.findViewById(R.id.main_rv)
         layoutManager = LinearLayoutManager(rootView.context, RecyclerView.VERTICAL,false)
-        adapter = MainRecyclerViewAdapter(ArrayList())
+        adapter = MainRecyclerViewListAdapter()
         rv.layoutManager = layoutManager
         rv.adapter = adapter
 
+
         initAdapterListener()
+
+
 
 
     }
@@ -94,7 +118,7 @@ class MainFragment : Fragment() {
     private fun initAdapterListener()
     {
         // Vokabelheft öffnen
-        adapter.setOnAdapterShowButtonClick(object:MainRecyclerViewAdapter.OnAdapterShowButtonClick{
+        adapter.setOnAdapterShowButtonClick(object:MainRecyclerViewListAdapter.OnAdapterShowButtonClick{
             override fun setOnAdapterShowButtonClick(bookId: Long) {
                 var bundle = Bundle()
                 //Log.d("VocLearner","MainFragment - initAdapterister - adapter.setOnAdapterShowButtonClick: bookdId = $bookId")
@@ -106,7 +130,7 @@ class MainFragment : Fragment() {
         })
 
         // Schnelle Übung starten
-        adapter.setOnAdapterPractiseButtonClick(object:MainRecyclerViewAdapter.OnAdapterPractiseButtonClick{
+        adapter.setOnAdapterPractiseButtonClick(object:MainRecyclerViewListAdapter.OnAdapterPractiseButtonClick{
             override fun setOnAdapterPractiseButtonClick(pos: Int) {
                 var bundle = bundleOf("position" to pos)
                 navController.navigate(R.id.action_global_nested_practise,bundle)
@@ -116,7 +140,7 @@ class MainFragment : Fragment() {
         })
 
         // Vokabelheft löschen
-        adapter.setOnAdapterDeleteButtonClick(object:MainRecyclerViewAdapter.OnAdapterDeleteButtonClick{
+        adapter.setOnAdapterDeleteButtonClick(object:MainRecyclerViewListAdapter.OnAdapterDeleteButtonClick{
             override fun setOnAdapterDeleteButtonClick(book: Book) {
                 // Vokabelheft wird endgültig gelöscht
                 // Vorgang kann nicht rückgängig gemacht werden
@@ -125,15 +149,17 @@ class MainFragment : Fragment() {
                 dialog.setOnDialogClickListener(object:DialogStandardAlert.OnDialogClickListener{
                     override fun setOnDialogClickListener() {
                         viewModel.onDeleteBook(book)
+                        deleteBtnWasPushed = true
                     }
 
                 })
+
             }
 
         })
 
         // Vokabelheft teilen:
-        adapter.setOnAdapterShareButtonClick(object:MainRecyclerViewAdapter.OnAdapterShareButtonClick{
+        adapter.setOnAdapterShareButtonClick(object:MainRecyclerViewListAdapter.OnAdapterShareButtonClick{
             override fun setOnAdapterShareButtonClick(pos: Int) {
                 Toast.makeText(rootView.context,"Vokabelheft wird geteilt...",Toast.LENGTH_SHORT).show()
             }
@@ -148,7 +174,7 @@ class MainFragment : Fragment() {
         toolbar = rootView.findViewById(R.id.fragment_main_toolbar)
         toolbar.setNavigationOnClickListener {
             var bundle = bundleOf("source" to 0)
-            navController.navigate(R.id.action_main_setting,bundle)
+            navController.navigate(R.id.action_global_settings,bundle)
         }
         toolbar.setOnMenuItemClickListener {
             if(it.itemId == R.id.menu_main_import)
@@ -168,6 +194,8 @@ class MainFragment : Fragment() {
             }
             true
         }
+
+
 
     }
 

@@ -51,6 +51,8 @@ class DialogStandardAlert(var main:String, var sub:String,var btnMain:String ="o
         // Init. Buttons:
         btnOk = dialogView.findViewById(R.id.dialog_standard_alert_btn_ok)
         btnAbort = dialogView.findViewById(R.id.dialog_standard_alert_btn_abort)
+        btnOk.text = btnMain
+        btnAbort.text = btnSub
         // Click_Listener:
         btnOk.setOnClickListener {
 

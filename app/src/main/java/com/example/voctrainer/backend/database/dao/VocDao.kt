@@ -3,7 +3,7 @@ package com.example.voctrainer.backend.database.dao
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.voctrainer.backend.database.entities.BookWithSettings
+
 
 import com.example.voctrainer.backend.database.entities.Voc
 
@@ -12,7 +12,7 @@ interface VocDao
 {
 
     // ************   Einfügen   ************
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(voc:Voc)
 
 
@@ -21,7 +21,7 @@ interface VocDao
 
 
     // ************   Updaten   ************
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     fun update(voc:Voc)
 
     @Update
@@ -35,16 +35,22 @@ interface VocDao
     @Delete
     fun deleteAll(vocs:List<Voc>)
 
-    @Query("DELETE FROM voc_table WHERE bookId == :bookId")
+    @Query("DELETE FROM Voc WHERE bookId == :bookId")
     fun clear(bookId: Long)
 
 
     // ************   Abfragen   ************
 
-    @Query("SELECT * FROM voc_table WHERE bookId == :bookId")
+    @Query("SELECT * FROM Voc WHERE bookId == :bookId")
     fun getVocs(bookId:Long):LiveData<List<Voc>>
 
-    @Query("SELECT * FROM voc_table WHERE id == :vocId AND bookId == :bookId")
+    @Query("SELECT * FROM Voc WHERE bookId == :bookId")
+    fun getOfflineVocs(bookId:Long):List<Voc>
+
+    @Query("SELECT * FROM Voc WHERE id == :vocId AND bookId == :bookId")
     fun getVocById(vocId:Long,bookId: Long): LiveData<Voc>
+
+    @Query("SELECT * FROM Voc WHERE id == :vocId AND bookId == :bookId")
+    fun getOfflineVocById(vocId:Long,bookId: Long): Voc
 
 }

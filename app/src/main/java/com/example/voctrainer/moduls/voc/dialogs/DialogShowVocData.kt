@@ -120,14 +120,22 @@ class DialogShowVocData(var voc: Voc):DialogFragment(), View.OnClickListener {
 
     private fun dismissDialog()
     {
-        var dialog = DialogStandardAlert("Möchtest du die Eingabe wirklich beenden?","Etwaige Eingaben gehen verloren!","Ja","Nein")
-        dialog.show(childFragmentManager,"")
-        dialog.setOnDialogClickListener(object: DialogStandardAlert.OnDialogClickListener{
-            override fun setOnDialogClickListener() {
-                dismiss()
-            }
 
-        })
+        if(!etNative.text.equals(voc.native2) || !etForeign.text.equals(voc.foreign))
+        {
+            var dialog = DialogStandardAlert("Möchtest du die Eingabe wirklich beenden?","Etwaige Eingaben gehen verloren!","Ja","Nein")
+            dialog.show(childFragmentManager,"")
+            dialog.setOnDialogClickListener(object:DialogStandardAlert.OnDialogClickListener{
+                override fun setOnDialogClickListener() {
+                    dismiss()
+                }
+
+            })
+        }
+        else
+        {
+            dismiss()
+        }
     }
 
     private fun clearEditText(et: EditText)

@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.voctrainer.R
+import com.example.voctrainer.moduls.practise.PractiseProcessor
 import com.example.voctrainer.moduls.standard.dialogs.DialogStandardAlert
 
 class PractiseFragment():Fragment()
@@ -32,6 +33,10 @@ class PractiseFragment():Fragment()
     ): View? {
         rootView =  inflater.inflate(R.layout.fragment_practise, container, false)
         initButtons()
+
+        // PractiseViewModel einfügen
+        // Übergeben über Args. wird die Id der Settings...
+
         return rootView
     }
 

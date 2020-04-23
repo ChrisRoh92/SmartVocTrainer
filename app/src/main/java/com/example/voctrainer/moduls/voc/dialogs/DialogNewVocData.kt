@@ -80,8 +80,11 @@ class DialogNewVocData: DialogFragment(), View.OnClickListener {
         etNative = dialogView.findViewById(R.id.dialog_voc_newvocdata_et_native)
         etForeign = dialogView.findViewById(R.id.dialog_voc_newvocdata_et_foreign)
 
+        etNative.requestFocus()
+
     }
 
+    // Daten speichern und Dialog beenden
     private fun saveData(finish:Boolean)
     {
         if(finish)
@@ -99,9 +102,6 @@ class DialogNewVocData: DialogFragment(), View.OnClickListener {
                 Snackbar.make(dialogView,"Bitte beide Felder ausfüllen!",Snackbar.LENGTH_SHORT).show()
 
             }
-
-
-
         }
         else
         {
@@ -120,16 +120,26 @@ class DialogNewVocData: DialogFragment(), View.OnClickListener {
 
     private fun dismissDialog()
     {
-        var dialog = DialogStandardAlert("Möchtest du die Eingabe wirklich beenden?","Etwaige Eingaben gehen verloren!","Ja","Nein")
-        dialog.show(childFragmentManager,"")
-        dialog.setOnDialogClickListener(object:DialogStandardAlert.OnDialogClickListener{
-            override fun setOnDialogClickListener() {
-                dismiss()
-            }
 
-        })
+        if(etNative.text.isNotEmpty() || etForeign.text.isNotEmpty())
+        {
+            var dialog = DialogStandardAlert("Möchtest du die Eingabe wirklich beenden?","Etwaige Eingaben gehen verloren!","Ja","Nein")
+            dialog.show(childFragmentManager,"")
+            dialog.setOnDialogClickListener(object:DialogStandardAlert.OnDialogClickListener{
+                override fun setOnDialogClickListener() {
+                    dismiss()
+                }
+
+            })
+        }
+        else
+        {
+            dismiss()
+        }
+
 
     }
+
 
     private fun clearEditText(et:EditText)
     {

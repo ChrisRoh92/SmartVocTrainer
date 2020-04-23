@@ -1,12 +1,19 @@
 package com.example.voctrainer.moduls.main.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.voctrainer.R
 import com.example.voctrainer.backend.database.entities.Book
+import com.example.voctrainer.backend.database.entities.BookWithVocs
+import com.example.voctrainer.moduls.main.utils.MyDiffCallback
+import com.example.voctrainer.moduls.main.utils.getBookProgress
+import com.example.voctrainer.moduls.main.utils.getBookStatus
+import kotlin.math.roundToInt
 
 class MainRecyclerViewAdapter(var content:ArrayList<Book>):
     RecyclerView.Adapter<MainRecyclerViewAdapter.ViewHolder>() {
@@ -35,13 +42,26 @@ class MainRecyclerViewAdapter(var content:ArrayList<Book>):
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int)
     {
-        holder.tvTitle.text = content[position].name
-        holder.tvSubTitle.text = content[position].timeStamp
+        val book = content[holder.adapterPosition]
+        val progress = getProgress(book.vocCount,book.vocLearned)
+        Log.e("VocTrainer","MainRecyclerViewAdapter.kt onBindViewHolder progress = $progress")
+
+        holder.tvTitle.text = book.name
+        holder.tvSubTitle.text = book.timeStamp
+
+        // Progress:
+        holder.tvProgress.text = "$progress %"
+
+        holder.tvVocs.text = "${book.vocCount}"
+        holder.tvVocsOpen.text = "${book.vocUnLearned}"
+        holder.tvVocsLearned.text = "${book.vocLearned}"
+        holder.pbProgress.progress = progress
+
 
         holder.btnShow.setOnClickListener {
             if(mShowListener!=null)
             {
-                mShowListener.setOnAdapterShowButtonClick(content[holder.adapterPosition].id)
+                mShowListener.setOnAdapterShowButtonClick(book.id)
             }
         }
 
@@ -55,7 +75,7 @@ class MainRecyclerViewAdapter(var content:ArrayList<Book>):
         holder.btnDelete.setOnClickListener {
             if(mDeleteListener!=null)
             {
-                mDeleteListener.setOnAdapterDeleteButtonClick(content[holder.adapterPosition])
+                mDeleteListener.setOnAdapterDeleteButtonClick(book)
             }
         }
 
@@ -69,17 +89,24 @@ class MainRecyclerViewAdapter(var content:ArrayList<Book>):
 
     fun updateContent(newContent:ArrayList<Book>)
     {
-        content = newContent
-        if(content.isEmpty())
+        val diffResult = DiffUtil.calculateDiff(MyDiffCallback(content,newContent))
+        diffResult.dispatchUpdatesTo(this)
+        /*content = newContent
+        notifyDataSetChanged()*/
+
+
+    }
+
+    fun getProgress(vocCount:Int,vocLearned:Int):Int
+    {
+        return if(vocCount == 0)
         {
-            notifyDataSetChanged()
+            0
         }
         else
         {
-            notifyItemInserted(content.lastIndex-1)
+            ((vocLearned.toFloat()/vocCount)*100).roundToInt()
         }
-
-
     }
 
 
@@ -99,8 +126,13 @@ class MainRecyclerViewAdapter(var content:ArrayList<Book>):
         var tvVocsOpen: TextView = itemView.findViewById(R.id.item_voc_tv_voc_offen)
         var tvVocs: TextView = itemView.findViewById(R.id.item_voc_tv_voc_anzahl)
         var tvVocsLearned: TextView = itemView.findViewById(R.id.item_voc_tv_voc_gelernt)
-        // SeekBar
+        // ProgressBar
         var pbProgress:ProgressBar = itemView.findViewById(R.id.item_voc_sk)
+
+        init {
+            pbProgress.max = 100
+
+        }
 
 
     }

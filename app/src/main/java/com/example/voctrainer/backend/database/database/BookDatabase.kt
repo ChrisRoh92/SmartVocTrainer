@@ -6,8 +6,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.voctrainer.backend.database.dao.BookDao
 import com.example.voctrainer.backend.database.entities.Book
+import com.example.voctrainer.backend.database.entities.Voc
 
-@Database(entities = arrayOf(Book::class), version = 1,exportSchema = false)
+@Database(entities = arrayOf(Book::class, Voc::class), version = 1,exportSchema = false)
 abstract class BookDatabase:RoomDatabase()
 {
     abstract fun bookDao(): BookDao

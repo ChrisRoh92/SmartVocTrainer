@@ -42,6 +42,9 @@ class VocDatasFragment: Fragment()
     private lateinit var vocViewModelFactory: VocViewModelFactory
     private var bookId:Long? = 0
 
+    // Workaround
+    private var justContent = false
+
 
 
     override fun onCreateView(
@@ -63,8 +66,6 @@ class VocDatasFragment: Fragment()
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         bookId = arguments?.getLong("bookId",0)
-        Log.e("VocDatasFragment","bookId = $bookId")
-        Log.e("VocDatasFragment","application = ${activity!!.application}")
         try {
             vocViewModelFactory = VocViewModelFactory(bookId!!,activity!!.application)
             vocViewModel = ViewModelProvider(this,vocViewModelFactory).get(VocViewModel::class.java)
@@ -82,7 +83,9 @@ class VocDatasFragment: Fragment()
     private fun startObserver()
     {
         vocViewModel.vocs.observe(viewLifecycleOwner, Observer { vocs ->
-            adapter.updateContent(ArrayList(vocs))
+            adapter.updateContent(ArrayList(vocs),justContent)
+            justContent = false
+
         })
     }
 
@@ -91,14 +94,11 @@ class VocDatasFragment: Fragment()
         fabAdd = rootView.findViewById(R.id.fragment_voc_datas_fab)
         fabAdd.setOnClickListener {
 
-
             var dialog = DialogNewVocData()
             dialog.show(childFragmentManager,"")
             dialog.setOnDialogClickListener(object:DialogNewVocData.OnDialogClickListener{
                 override fun setOnDialogClickListener(vocNative: String, vocForeign: String) {
-                    Log.e("VocDatasFragment","vocNative = $vocNative")
-                    Log.e("VocDatasFragment","vocForeign = $vocForeign")
-                    vocViewModel.onAddNewVoc("vocNative","vocForeign")
+                    vocViewModel.onAddNewVoc(vocNative,vocForeign)
                 }
 
             })
@@ -129,6 +129,7 @@ class VocDatasFragment: Fragment()
         adapter = VocDataRecyclerViewAdapter(ArrayList())
         rv.layoutManager = layoutManager
         rv.adapter = adapter
+        rv.setHasFixedSize(true)
 
         // Anzeigen von einer Vokabeln sowie ggfs. Updaten...
         adapter.setOnItemClickListener(object:VocDataRecyclerViewAdapter.OnItemClickListener{
@@ -140,10 +141,18 @@ class VocDatasFragment: Fragment()
                     override fun setOnDialogClickListener(vocNative: String, vocForeign: String) {
                         voc.native2 = vocNative
                         voc.foreign = vocForeign
+                        justContent = true
                         vocViewModel.onUpdateVoc(voc)
                     }
 
                 })
+            }
+
+        })
+
+        adapter.setOnItemLongClickListener(object:VocDataRecyclerViewAdapter.OnItemLongClickListener{
+            override fun setOnItemLongClickListener(voc: Voc) {
+                vocViewModel.onDeleteNewVoc(voc)
             }
 
         })

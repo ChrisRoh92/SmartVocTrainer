@@ -72,30 +72,17 @@
                 app:layout_constraintTop_toTopOf="@+id/textView58"
                 app:srcCompat="@drawable/ic_sort_black_24dp" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/dialog_voc_datas_sorting_rv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divider38"
-                tools:itemCount="3"
-                tools:listitem="@layout/item_voc_datas_sorting" />
-
             <View
                 android:id="@+id/divider39"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="4dp"
                 android:background="?android:attr/listDivider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dialog_voc_datas_sorting_rv" />
+                app:layout_constraintTop_toBottomOf="@+id/dialog_voc_datas_sorting_radiogroup" />
 
             <Button
                 android:id="@+id/dialog_voc_datas_sorting_btn_ok"
@@ -119,6 +106,40 @@
                 android:text="Abbrechen"
                 app:layout_constraintEnd_toStartOf="@+id/dialog_voc_datas_sorting_btn_ok"
                 app:layout_constraintTop_toTopOf="@+id/dialog_voc_datas_sorting_btn_ok" />
+
+            <RadioGroup
+                android:id="@+id/dialog_voc_datas_sorting_radiogroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/divider38">
+
+                <RadioButton
+                    android:id="@+id/dialog_voc_datas_sorting_rbtn_alphabet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="RadioButton" />
+
+                <RadioButton
+                    android:id="@+id/dialog_voc_datas_sorting_rbtn_learning_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="RadioButton" />
+
+                <RadioButton
+                    android:id="@+id/dialog_voc_datas_sorting_rbtn_daycount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="RadioButton" />
+
+                <RadioButton
+                    android:id="@+id/dialog_voc_datas_sorting_rbtn_date_insert"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="RadioButton" />
+            </RadioGroup>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

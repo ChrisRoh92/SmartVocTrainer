@@ -66,7 +66,7 @@ class SettingsFragment : Fragment() {
             }
             else
             {
-                findNavController().navigate(R.id.action_setting_voc)
+                findNavController().navigate(R.id.action_global_settings)
             }
 
 

@@ -1,17 +1,46 @@
 package com.example.voctrainer.backend.database.dao
 
-import androidx.room.Dao
-import androidx.room.Query
-import androidx.room.Transaction
-import com.example.voctrainer.backend.database.entities.BookWithSettings
+import androidx.lifecycle.LiveData
+import androidx.room.*
+import com.example.voctrainer.backend.database.entities.Setting
 
 @Dao
 interface SettingsDao
 {
 
+    @Insert
+    fun insert(setting: Setting)
+
+    @Insert
+    fun insertAll(settings:List<Setting>)
+
+    @Delete
+    fun delete(setting: Setting)
+
+    @Delete
+    fun deleteAll(settings: List<Setting>)
+
+    @Update
+    fun update(setting: Setting)
+
+    @Update
+    fun updateAll(settings: List<Setting>)
+
+    // Liste erhalten:
+    @Query("SELECT * FROM setting WHERE ID == :bookID")
+    fun getSettings(bookID:Long):LiveData<List<Setting>>
+
+    @Query("SELECT * FROM setting WHERE ID == :bookID")
+    fun getOfflineSettings(bookID:Long):List<Setting>
+
+    // Settings by ID:
+    @Query("SELECT * FROM setting WHERE id == :settingsID AND bookId == :bookId")
+    fun getSettingsByID(settingsID:Long,bookId: Long):LiveData<Setting>
+
+    // Offline Settings by ID:
+    @Query("SELECT * FROM setting WHERE id == :settingsID AND bookId == :bookId")
+    fun getOfflineSettingsByID(settingsID:Long,bookId: Long):Setting
 
 
-    @Transaction
-    @Query("SELECT * FROM book")
-    fun getBookWithSettings(): List<BookWithSettings>
+
 }

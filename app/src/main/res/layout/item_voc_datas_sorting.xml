@@ -10,9 +10,10 @@
         android:id="@+id/item_voc_datas_sorting_tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="TextView"
         android:textColor="@color/text_main"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -20,7 +21,7 @@
         android:id="@+id/item_voc_datas_sorting_tv_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:text="TextView"
         android:textColor="@color/text_sub"
         android:textSize="10sp"
@@ -28,13 +29,12 @@
         app:layout_constraintStart_toStartOf="@+id/item_voc_datas_sorting_tv_title"
         app:layout_constraintTop_toBottomOf="@+id/item_voc_datas_sorting_tv_title" />
 
-    <Switch
-        android:id="@+id/item_voc_datas_sorting_switch"
+    <CheckBox
+        android:id="@+id/item_voc_datas_sorting_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/item_voc_datas_sorting_tv_subtitle"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/item_voc_datas_sorting_tv_title" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

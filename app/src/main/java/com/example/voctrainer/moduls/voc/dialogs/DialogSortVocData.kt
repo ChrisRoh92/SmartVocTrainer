@@ -5,32 +5,37 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.ImageButton
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import androidx.fragment.app.DialogFragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.voctrainer.R
-import com.example.voctrainer.moduls.voc.adapter.VocDataSortRecyclerViewAdapter
 
 class DialogSortVocData():DialogFragment()
 {
     // Allgemeine Variablen:
     private lateinit var dialogView: View
     // Beispieldaten...
-    private var direction = false
-    private var position = 0
+
 
     // View Elemente:
     private lateinit var btnChange:ImageButton
     private lateinit var btnOk: Button
     private lateinit var btnAbort: Button
 
-    // RecyclerView
-    private lateinit var rv:RecyclerView
-    private lateinit var layoutManager: LinearLayoutManager
-    private lateinit var adapter: VocDataSortRecyclerViewAdapter
-    private lateinit var content: FrameLayout   // Klicken zum Import und anschließend dort alles anzeigen
+    //RadioButton
+    private lateinit var rbtnGroup:RadioGroup
+    private var rbtnList:ArrayList<RadioButton> = ArrayList()
+    private val rbtnIDs:ArrayList<Int> = arrayListOf(
+        R.id.dialog_voc_datas_sorting_rbtn_alphabet,
+        R.id.dialog_voc_datas_sorting_rbtn_learning_status,
+        R.id.dialog_voc_datas_sorting_rbtn_daycount,
+        R.id.dialog_voc_datas_sorting_rbtn_date_insert
+    )
+    private var direction = true
+    private var position = 0
+
+
 
 
 
@@ -51,12 +56,42 @@ class DialogSortVocData():DialogFragment()
         dialogView = inflater.inflate(R.layout.dialog_voc_datas_sort, container, false)
 
         // Initialisieren:
-        initRecyclerView()
+        initRadioButtons()
         initViewElements()
 
         return dialogView
     }
 
+
+    private fun initRadioButtons()
+    {
+        rbtnGroup = dialogView.findViewById(R.id.dialog_voc_datas_sorting_radiogroup)
+        for(i in rbtnIDs)
+        {
+            rbtnList.add(dialogView.findViewById(i))
+        }
+        rbtnList[0].isChecked = true
+        setRadioTexts()
+    }
+
+    private fun setRadioTexts()
+    {
+        if(direction)
+        {
+            // Aufsteigend
+            rbtnList[0].text = "Alphabetisch (A-Z)"
+            rbtnList[1].text = "Lernzustand (Nicht gelernt -> Gelernt)"
+            rbtnList[2].text = "Anzahl Tage letztes mal geübt (Aufsteigend)"
+            rbtnList[3].text = "Datum Eingetragen (Aufsteigend)"
+        }
+        else
+        {
+            rbtnList[0].text = "Alphabetisch (Z-A)"
+            rbtnList[1].text = "Lernzustand (Gelernt -> Nicht gelernt)"
+            rbtnList[2].text = "Anzahl Tage letztes mal geübt (Absteigend)"
+            rbtnList[3].text = "Datum Eingetragen (Absteigend)"
+        }
+    }
 
     private fun initViewElements()
     {
@@ -66,13 +101,15 @@ class DialogSortVocData():DialogFragment()
 
         // Click Listener
         btnChange.setOnClickListener {
-            adapter.setDirectionOfSorting(!direction)
+
             direction = !direction
+            setRadioTexts()
         }
         btnOk.setOnClickListener {
             if(mListener!=null)
             {
-                mListener.setOnDialogClickListener(adapter.initPos,direction)
+                position = rbtnGroup.indexOfChild(dialogView.findViewById(rbtnGroup.checkedRadioButtonId))
+                mListener.setOnDialogClickListener(position,direction)
                 dismiss()
             }
         }
@@ -81,21 +118,7 @@ class DialogSortVocData():DialogFragment()
         }
     }
 
-    private fun initRecyclerView()
-    {
-        rv = dialogView.findViewById(R.id.dialog_voc_datas_sorting_rv)
-        layoutManager = LinearLayoutManager(dialogView.context,RecyclerView.VERTICAL,false)
-        adapter = VocDataSortRecyclerViewAdapter(arrayListOf("Alphabetisch","Lernzustand","Anzahl Tage letztes mal Geübt","Datum Eingetragen"),
-            arrayListOf("A-Z","Nicht gelernt - Gelernt","Aufsteigend","Aufsteigend"),position)
-        rv.layoutManager = layoutManager
-        rv.adapter = adapter
-        adapter.setOnItemClickListener(object:VocDataSortRecyclerViewAdapter.OnItemClickListener{
-            override fun setOnItemClickListener(pos: Int) {
-                position = pos
-            }
 
-        })
-    }
 
     interface OnDialogClickListener
     {

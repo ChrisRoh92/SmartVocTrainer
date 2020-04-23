@@ -19,6 +19,16 @@
     <!-- Divider -->
     <color name="divider">@color/colorPrimary</color>
 
+    <!-- Background Colors -->
+    <color name="green_dark">#003300</color>
+    <color name="green_light">#1b5e20</color>
+
+    <color name="red_dark">#7f0000</color>
+    <color name="red_light">#b71c1c</color>
+
+    <color name="blue_dark">#006db3</color>
+    <color name="blue_light">#039be5</color>
+
 
 
 </resources>

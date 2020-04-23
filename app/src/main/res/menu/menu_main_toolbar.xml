@@ -7,6 +7,7 @@
         android:id="@+id/menu_main_search"
         android:icon="@drawable/ic_search_black_24dp"
         android:title="Search"
+        android:titleCondensed="asdassd"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="always" />
     <item

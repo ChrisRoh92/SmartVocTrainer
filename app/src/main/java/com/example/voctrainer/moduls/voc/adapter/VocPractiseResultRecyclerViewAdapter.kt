@@ -8,9 +8,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.voctrainer.R
+import com.example.voctrainer.backend.database.entities.Test
 import kotlin.random.Random
 
-class VocPractiseResultRecyclerViewAdapter(var content:ArrayList<String>):
+class VocPractiseResultRecyclerViewAdapter(var content:ArrayList<Test>):
     RecyclerView.Adapter<VocPractiseResultRecyclerViewAdapter.ViewHolder>() {
 
 
@@ -34,7 +35,13 @@ class VocPractiseResultRecyclerViewAdapter(var content:ArrayList<String>):
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int)
     {
-        setIcon(Random.nextBoolean(),holder.imageCircle,holder.imageIcon)
+        val test = content[position]
+        setIcon(test.result,holder.imageCircle,holder.imageIcon)
+        holder.tvResultat.text = "%d.2".format(test.result) + " %"
+
+
+
+
         holder.itemView.setOnClickListener {
             mListener.setOnItemClickListener(holder.adapterPosition)
         }
@@ -42,9 +49,9 @@ class VocPractiseResultRecyclerViewAdapter(var content:ArrayList<String>):
     }
 
 
-    private fun setIcon(status:Boolean,circle:ImageView,icon:ImageView)
+    private fun setIcon(result:Float,circle:ImageView,icon:ImageView)
     {
-        if(status)
+        if(result > 75f)
         {
             // Wenn true, dann bestanden
             circle.setImageResource(R.drawable.custom_circle_green)
@@ -57,6 +64,12 @@ class VocPractiseResultRecyclerViewAdapter(var content:ArrayList<String>):
             icon.setImageResource(R.drawable.ic_close_white_24dp)
 
         }
+    }
+
+    fun setNewContent(newContent:ArrayList<Test>)
+    {
+        content = newContent
+        notifyDataSetChanged()
     }
 
 

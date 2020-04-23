@@ -7,24 +7,30 @@ import androidx.lifecycle.ViewModel
 import androidx.room.Room
 import com.example.voctrainer.backend.database.database.BookDatabase
 import com.example.voctrainer.backend.database.database.VocDataBase
+import com.example.voctrainer.backend.database.entities.Book
+import com.example.voctrainer.backend.database.entities.Test
 import com.example.voctrainer.backend.database.entities.Voc
+import com.example.voctrainer.backend.repository.MainRepository
 import kotlinx.coroutines.*
+import kotlin.random.Random
 
 class VocViewModel(private val bookId:Long,application: Application) : AndroidViewModel(application)
 {
-    private var db: VocDataBase = VocDataBase.getInstance(application)
-    private var vocDao = db.vocDao()
+    // Repository
+    private val mainRep = MainRepository(context = application.applicationContext)
 
     // Coroutine Stuff:
     private var viewModelJob = Job()
     private var uiScope = CoroutineScope(Dispatchers.Main+viewModelJob)
 
     // Alle Vokabeln:
-    var vocs = vocDao.getVocs(bookId)
+    var vocs = mainRep.getVocs(bookId)
+    var tests = mainRep.getTest(bookId)
 
-    init {
-        Log.i("VocViewModel","VocViewModel wurde erstellt")
-    }
+
+
+
+
 
 
 
@@ -35,75 +41,64 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
     {
         uiScope.launch {
 
-            insert(Voc(0L,bookId,vocNative,vocForeign,0,"k.A."))
+            mainRep.insertNewVoc(Voc(0L,bookId,vocNative,vocForeign, 0,"-"))
+            mainRep.updateBookWithNewData(bookId)
         }
     }
-
     // Vokabeln löschen:
     fun onDeleteNewVoc(voc: Voc)
     {
         uiScope.launch {
-            delete(voc)
+            mainRep.deleteVoc(voc)
+            mainRep.updateBookWithNewData(bookId)
         }
     }
-
     // Vokabeln updaten:
     fun onUpdateVoc(voc: Voc)
     {
         uiScope.launch {
-            update(voc)
+            mainRep.updateVoc(voc)
+            vocs = mainRep.getVocs(bookId)
+
         }
     }
 
-
-    private suspend fun insert(voc:Voc)
+    fun onAddNewTest()
     {
-        withContext(Dispatchers.IO)
-        {
-
-            vocDao.insert(voc)
+        uiScope.launch {
+            val test = Test(0,bookId, arrayListOf(1,2,3,4,5,6), arrayListOf("ad","ad","ad","ad","ad","ad"), 34,77f,0)
+            mainRep.insertNewTest(test)
         }
     }
 
-    private suspend fun insertAll(vocs:List<Voc>)
+    private fun getItemIds():ArrayList<Long>
     {
-        withContext(Dispatchers.IO)
+        var results:ArrayList<Long> = ArrayList()
+        for(i in 1..20)
         {
-            vocDao.insertAll(vocs)
+         results.add(i.toLong())
         }
+
+        return results
     }
 
-    private suspend fun delete(voc:Voc)
+    private fun getSolutions():ArrayList<String>
     {
-        withContext(Dispatchers.IO)
+        var solutions:ArrayList<String> = ArrayList()
+        for(i in 1..20)
         {
-            vocDao.delete(voc)
+            solutions.add("Solution...")
         }
+        return solutions
+
     }
 
-    private suspend fun deleteAll(vocs:List<Voc>)
-    {
-        withContext(Dispatchers.IO)
-        {
-            vocDao.deleteAll(vocs)
-        }
-    }
 
-    private suspend fun update(voc:Voc)
-    {
-        withContext(Dispatchers.IO)
-        {
-            vocDao.update(voc)
-        }
-    }
 
-    private suspend fun updateAll(vocs:List<Voc>)
-    {
-        withContext(Dispatchers.IO)
-        {
-            vocDao.updateAll(vocs)
-        }
-    }
+
+
+
+
 
 
 

@@ -72,7 +72,7 @@
         android:layout_height="1dp"
         android:layout_marginTop="4dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintEnd_toEndOf="@+id/item_voc_content_tv_date"
+        app:layout_constraintEnd_toEndOf="@+id/item_voc_content_tv_subtitle"
         app:layout_constraintStart_toStartOf="@+id/item_voc_content_tv_date"
         app:layout_constraintTop_toBottomOf="@+id/item_voc_content_tv_subtitle" />
 
@@ -80,9 +80,9 @@
         android:id="@+id/divider18"
         android:layout_width="2dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="12dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toBottomOf="@+id/textView9"
+        app:layout_constraintBottom_toBottomOf="@+id/item_voc_content_tv_date"
         app:layout_constraintStart_toEndOf="@+id/item_voc_content_image"
-        app:layout_constraintTop_toTopOf="@+id/item_voc_content_image" />
+        app:layout_constraintTop_toTopOf="@+id/item_voc_content_tv_title" />
 </androidx.constraintlayout.widget.ConstraintLayout>

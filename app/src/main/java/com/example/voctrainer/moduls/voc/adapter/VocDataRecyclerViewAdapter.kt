@@ -5,19 +5,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.voctrainer.R
 import com.example.voctrainer.backend.database.entities.Voc
+import com.example.voctrainer.moduls.voc.utils.VocDataDiffUtil
 
 class VocDataRecyclerViewAdapter(var content:ArrayList<Voc>):
     RecyclerView.Adapter<VocDataRecyclerViewAdapter.ViewHolder>() {
 
-
-
     // Interface
     private lateinit var mListener:OnItemClickListener
+    private lateinit var mLongListener:OnItemLongClickListener
 
-
+    // ImageList
+    private val imageList:ArrayList<Int> = arrayListOf(R.drawable.ic_close_black_24dp,R.drawable.ic_refresh_black_24dp,R.drawable.ic_check_black_24dp)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_voc_datas_content,parent,false)
@@ -36,6 +38,7 @@ class VocDataRecyclerViewAdapter(var content:ArrayList<Voc>):
         holder.tvTitle.text = voc.native2
         holder.tvSubtitle.text = voc.foreign
         holder.tvDate.text = voc.lastPractiseDate
+        holder.image.setImageResource(imageList[voc.status])
 
         holder.itemView.setOnClickListener {
             if(mListener!=null)
@@ -43,14 +46,32 @@ class VocDataRecyclerViewAdapter(var content:ArrayList<Voc>):
                 mListener.setOnItemClickListener(content[holder.adapterPosition])
             }
         }
+        holder.itemView.setOnLongClickListener {
+            if(mLongListener!=null)
+            {
+                mLongListener.setOnItemLongClickListener(content[holder.adapterPosition])
+            }
+            true
+        }
 
     }
 
     // Später mit DiffUtil oder sowas...
-    fun updateContent(newContent:ArrayList<Voc>)
+    fun updateContent(newContent:ArrayList<Voc>,justContent:Boolean)
     {
-        content = newContent
-        notifyDataSetChanged()
+        if(!justContent)
+        {
+            val diffCallback = VocDataDiffUtil(content,newContent)
+            val diffResult = DiffUtil.calculateDiff(diffCallback)
+            content.clear()
+            content.addAll(newContent)
+            diffResult.dispatchUpdatesTo(this)
+        }
+        else
+        {
+            content = newContent
+            notifyDataSetChanged()
+        }
     }
 
 
@@ -71,4 +92,16 @@ class VocDataRecyclerViewAdapter(var content:ArrayList<Voc>):
     {
         this.mListener = mListener
     }
+
+
+    interface OnItemLongClickListener
+    {
+        fun setOnItemLongClickListener(voc:Voc)
+    }
+    fun setOnItemLongClickListener(mLongListener:OnItemLongClickListener)
+    {
+        this.mLongListener = mLongListener
+    }
+
+
 }
