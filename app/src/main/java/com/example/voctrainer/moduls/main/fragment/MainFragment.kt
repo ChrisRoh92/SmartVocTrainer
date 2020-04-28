@@ -32,6 +32,19 @@ import com.example.voctrainer.moduls.main.viewmodel.MainViewModel
 import com.example.voctrainer.moduls.standard.dialogs.DialogStandardAlert
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
+
+
+
+/*
+****** Offene Tasks ******
+- TODO() Suche nach Vokabelheften ist nicht implementiert....
+- TODO() Import von Vokabelheften muss implementiert werden
+- TODO() Teilen von Vokabelheften muss implementiert werden
+- TODO() Direktes Üben mit bookId starten, muss noch implementiert werden
+- TODO() Zwei mal zurück klicken, damit App beendet wird...
+******************************************************************
+ */
+
 class MainFragment : Fragment() {
 
     // Allgemeines Stuff:

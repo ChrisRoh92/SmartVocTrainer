@@ -13,6 +13,18 @@ import com.example.voctrainer.moduls.voc.adapter.VocStatisticRecyclerViewAdapter
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
 
+/*
+****** Offene Tasks ******
+- TODO() VocViewModel muss noch abgerufen werden.
+- TODO() Überlegen welche Daten angezeigt werden sollen
+- TODO() Daten für die Charts im VocViewModel bereitstellen lassen
+- TODO() Charts implementieren
+-
+
+*
+
+******************************************************************
+ */
 class VocStatisticFragment(): Fragment()
 {
     // Allgemeine Variablen:

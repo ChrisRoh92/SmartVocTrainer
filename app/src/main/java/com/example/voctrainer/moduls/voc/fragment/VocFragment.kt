@@ -1,29 +1,17 @@
 package com.example.voctrainer.moduls.voc.fragment
 
 
-import android.app.NotificationChannel
-import android.app.NotificationChannelGroup
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
-import com.example.voctrainer.MainActivity
-
 import com.example.voctrainer.R
 import com.example.voctrainer.moduls.voc.adapter.VocStateAdapter
 import com.example.voctrainer.moduls.voc.dialogs.DialogImportVocData
@@ -45,7 +33,7 @@ class VocFragment : Fragment() {
     private var currentPos = 0
 
     // Toolbar:
-    private lateinit var toolbar: Toolbar
+    private var toolbar: Toolbar? = null
 
     // NotificationChannel:
 
@@ -55,10 +43,6 @@ class VocFragment : Fragment() {
     private var bookId:Long? = 0L
 
 
-
-
-    private lateinit var viewModel: VocViewModel
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -67,6 +51,7 @@ class VocFragment : Fragment() {
 
 
         initViewPager2()
+        if(toolbar!=null)
         initToolBar()
 
         requireActivity().onBackPressedDispatcher.addCallback(this,object:OnBackPressedCallback(true){
@@ -88,18 +73,39 @@ class VocFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        bookId = arguments?.getLong("bookId",0L)
 
-        Log.e("VocFragment","bookId = $bookId")
+
+        /*Log.e("VocFragment","bookId = $bookId")
         Log.e("VocFragment","application = ${activity!!.application}")
         vocViewModelFactory = VocViewModelFactory(bookId!!,activity!!.application)
-        vocViewModel = ViewModelProvider(this,vocViewModelFactory).get(VocViewModel::class.java)
+        vocViewModel = ViewModelProvider(this,vocViewModelFactory).get(VocViewModel::class.java)*/
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        bookId = arguments?.getLong("bookId",0L)
+        vocViewModelFactory = VocViewModelFactory(bookId!!,activity!!.application)
+        vocViewModel = ViewModelProvider(this,vocViewModelFactory).get(VocViewModel::class.java)
+        startObserver()
 
 
+    }
+
+    private fun startObserver()
+    {
+        vocViewModel.book.observe(viewLifecycleOwner, Observer{book ->
+            if(toolbar==null)
+            {
+                initToolBar()
+                toolbar!!.title = book.name
+                toolbar!!.subtitle = "Erstellt am ${book.timeStamp}"
+            }
+            else
+            {
+                toolbar!!.title = book.name
+                toolbar!!.subtitle = "Erstellt am ${book.timeStamp}"
+            }
+        })
     }
 
 
@@ -138,10 +144,10 @@ class VocFragment : Fragment() {
     private fun initToolBar()
     {
         toolbar = rootView.findViewById(R.id.fragment_voc_toolbar)
-        toolbar.setNavigationOnClickListener {
+        toolbar!!.setNavigationOnClickListener {
             findNavController().navigate(R.id.action_voc_main)
         }
-        toolbar.setOnMenuItemClickListener {
+        toolbar!!.setOnMenuItemClickListener {
             if(it.itemId == R.id.menu_voc_import)
             {
                 /*var bundle = bundleOf("source" to 1)
@@ -176,13 +182,13 @@ class VocFragment : Fragment() {
         if(newPos == 1)
         {
             // VocData Menu aufrufen...
-            toolbar.menu.clear()
-            toolbar.inflateMenu(R.menu.menu_voc_data)
+            toolbar!!.menu.clear()
+            toolbar!!.inflateMenu(R.menu.menu_voc_data)
         }
         else if(newPos != 1 && oldPos == 1)
         {
-            toolbar.menu.clear()
-            toolbar.inflateMenu(R.menu.menu_voc_toolbar)
+            toolbar!!.menu.clear()
+            toolbar!!.inflateMenu(R.menu.menu_voc_toolbar)
         }
     }
 

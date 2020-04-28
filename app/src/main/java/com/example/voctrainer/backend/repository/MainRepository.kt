@@ -1,6 +1,7 @@
 package com.example.voctrainer.backend.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.voctrainer.backend.database.database.BookDatabase
 import com.example.voctrainer.backend.database.database.SettingsDatabase
@@ -16,6 +17,15 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
+
+/*
+Offene Punkte und Ideen zu dieser Klasse:
+- SubRepositories einrichten, sonst wird die Klass zu unübersichtlich...
+
+
+
+*/
+
 
 class MainRepository(val context: Context):CoroutineScope
 {
@@ -75,6 +85,28 @@ class MainRepository(val context: Context):CoroutineScope
     {
         return testDao.getTestByID(testId,bookId)
     }
+
+    // Die Letzten Bücher bekommen...
+    /*fun getLastBook():LiveData<Book>
+    {
+
+    }
+
+    fun getLastVoc(bookId: Long):LiveData<Voc>
+    {
+
+    }
+
+    fun getLastSettings(bookId: Long):LiveData<Setting>
+    {
+
+    }*/
+
+    fun getLastTest(bookId: Long):LiveData<List<Test>>
+    {
+        return testDao.getLastTest(bookId)
+    }
+
 
     // Offline - Listen geben:
     fun getOfflineBooks():List<Book>
@@ -247,7 +279,7 @@ class MainRepository(val context: Context):CoroutineScope
     {
         withContext(Dispatchers.IO)
         {
-            bookDao.insert(book)
+            bookDao.update(book)
         }
     }
     suspend fun updateVoc(voc:Voc)

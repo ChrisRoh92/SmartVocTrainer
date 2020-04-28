@@ -37,7 +37,12 @@ class VocPractiseResultRecyclerViewAdapter(var content:ArrayList<Test>):
     {
         val test = content[position]
         setIcon(test.result,holder.imageCircle,holder.imageIcon)
-        holder.tvResultat.text = "%d.2".format(test.result) + " %"
+        holder.tvResultat.text = "${test.result} %"
+        holder.tvVocsCorrect.text ="Davon Richtig: ${test.itemsCorrect}"
+        holder.tvVocs.text = "Anzahl Vokabeln: ${test.itemIds.size}"
+        holder.tvDate.text = "Übung vom ${test.timeStamp.subSequence(0,11)}"
+        holder.tvTime.text = "${test.timeStamp.subSequence(13,18)}"
+
 
 
 

@@ -20,8 +20,28 @@ import com.example.voctrainer.moduls.voc.dialogs.DialogSortVocData
 import com.example.voctrainer.moduls.voc.viewmodel.VocViewModel
 import com.example.voctrainer.moduls.voc.viewmodel.VocViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import java.lang.Exception
 
+
+
+/*
+****** Offene Tasks ******
+- TODO() Für OnLongClick ist noch keine Lösung gefunden (Vielleicht ein ganz neues Fragment als Notlösung?)
+  Soll Verwendung für folgende Features sein:
+        - Löschen von einer oder mehreren Vokabeln
+        - Vokabeln auswählen für einen Test
+        - Status von einer oder mehreren Vokabeln ändern
+        - Export von ausgewählten Vokabeln als .csv
+        - ...
+-TODO() Suchen von Vokabeln ist nicht implementiert
+-TODO() Sortieren ist nicht implementiert
+-TODO() Filtern ist nicht implementiert
+-TODO() Lernstatus wird noch als Zahl angezeigt....
+-TODO() SubTitle zu lang beim DialogShowVocData
+-TODO() !!! Import und Export von Vokabeln als .csv !!!
+******************************************************************
+ */
 class VocDatasFragment: Fragment()
 {
     // Allgemeine Variablen:
@@ -68,7 +88,7 @@ class VocDatasFragment: Fragment()
         bookId = arguments?.getLong("bookId",0)
         try {
             vocViewModelFactory = VocViewModelFactory(bookId!!,activity!!.application)
-            vocViewModel = ViewModelProvider(this,vocViewModelFactory).get(VocViewModel::class.java)
+            vocViewModel = ViewModelProvider(requireParentFragment(),vocViewModelFactory).get(VocViewModel::class.java)
             startObserver()
         } catch (e:Exception)
         {
@@ -86,7 +106,10 @@ class VocDatasFragment: Fragment()
             adapter.updateContent(ArrayList(vocs),justContent)
             justContent = false
 
+
         })
+
+
     }
 
     private fun initViews()

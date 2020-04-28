@@ -1,5 +1,6 @@
 package com.example.voctrainer.backend.database.converter
 
+import android.util.Log
 import androidx.room.TypeConverter
 import java.lang.Exception
 
@@ -23,6 +24,7 @@ class TestConverter
                 items.add(i.toLong())
             }catch (e:Exception)
             {
+                Log.e("VocTrainer",e.printStackTrace().toString())
                 e.printStackTrace()
             }
         }
@@ -49,6 +51,7 @@ class TestConverter
                 items.add(i)
             }catch (e:Exception)
             {
+                Log.e("VocTrainer",e.printStackTrace().toString())
                 e.printStackTrace()
             }
         }

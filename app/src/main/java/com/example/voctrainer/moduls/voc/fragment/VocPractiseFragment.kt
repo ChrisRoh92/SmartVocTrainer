@@ -18,6 +18,14 @@ import com.example.voctrainer.moduls.voc.viewmodel.VocViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.lang.Exception
 
+
+
+/*
+****** Offene Tasks ******
+- TODO() Es müssen noch Übungseinstellungen definiert werden, die dargestellt werden müssen
+- TODO() Sortieren und Filtern von Tests muss noch implementiert werden... (Alles in Dao)
+******************************************************************
+ */
 class VocPractiseFragment: Fragment()
 {
     // Allgemeine Variablen:
@@ -41,7 +49,7 @@ class VocPractiseFragment: Fragment()
         bookId = arguments?.getLong("bookId",0)
         try {
             vocViewModelFactory = VocViewModelFactory(bookId!!,activity!!.application)
-            vocViewModel = ViewModelProvider(this,vocViewModelFactory).get(VocViewModel::class.java)
+            vocViewModel = ViewModelProvider(requireParentFragment(),vocViewModelFactory).get(VocViewModel::class.java)
             startObserver()
         } catch (e: Exception)
         {

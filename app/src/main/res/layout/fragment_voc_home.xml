@@ -72,7 +72,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/textView30" />
 
                     <ProgressBar
-                        android:id="@+id/progressBar"
+                        android:id="@+id/fragment_voc_home_pb_main"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
                         android:progress="75"
                         app:layout_constraintEnd_toEndOf="@+id/divider22"
                         app:layout_constraintStart_toStartOf="@+id/divider22"
-                        app:layout_constraintTop_toBottomOf="@+id/textView35" />
+                        app:layout_constraintTop_toBottomOf="@+id/fragment_voc_home_tv_progress" />
 
                     <TextView
                         android:id="@+id/textView32"
@@ -89,8 +89,8 @@
                         android:text="0 %"
                         android:textColor="@color/text_sub2"
                         android:textSize="10sp"
-                        app:layout_constraintBottom_toTopOf="@+id/progressBar"
-                        app:layout_constraintStart_toStartOf="@+id/progressBar" />
+                        app:layout_constraintBottom_toTopOf="@+id/fragment_voc_home_pb_main"
+                        app:layout_constraintStart_toStartOf="@+id/fragment_voc_home_pb_main" />
 
                     <TextView
                         android:id="@+id/textView33"
@@ -99,18 +99,18 @@
                         android:text="100 %"
                         android:textColor="@color/text_sub2"
                         android:textSize="10sp"
-                        app:layout_constraintBottom_toTopOf="@+id/progressBar"
-                        app:layout_constraintEnd_toEndOf="@+id/progressBar" />
+                        app:layout_constraintBottom_toTopOf="@+id/fragment_voc_home_pb_main"
+                        app:layout_constraintEnd_toEndOf="@+id/fragment_voc_home_pb_main" />
 
                     <TextView
-                        android:id="@+id/textView35"
+                        android:id="@+id/fragment_voc_home_tv_progress"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="75 %"
                         android:textColor="@color/text_main"
-                        app:layout_constraintEnd_toEndOf="@+id/progressBar"
-                        app:layout_constraintStart_toStartOf="@+id/progressBar"
+                        app:layout_constraintEnd_toEndOf="@+id/fragment_voc_home_pb_main"
+                        app:layout_constraintStart_toStartOf="@+id/fragment_voc_home_pb_main"
                         app:layout_constraintTop_toBottomOf="@+id/divider22" />
 
                     <TextView
@@ -120,93 +120,22 @@
                         android:text="Gesamt Fortschritt"
                         android:textColor="@color/text_sub"
                         android:textSize="12sp"
-                        app:layout_constraintEnd_toEndOf="@+id/progressBar"
-                        app:layout_constraintStart_toStartOf="@+id/progressBar"
-                        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
-
-                    <ProgressBar
-                        android:id="@+id/progressBar2"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:background="@drawable/progressbar_circle_background"
-                        android:max="100"
-                        android:progress="10"
-                        android:progressDrawable="@drawable/progressbar_circle"
-                        app:layout_constraintDimensionRatio="1:1"
-                        app:layout_constraintEnd_toStartOf="@+id/progressBar3"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/divider25" />
-
-                    <ProgressBar
-                        android:id="@+id/progressBar3"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:background="@drawable/progressbar_circle_background"
-                        android:max="100"
-                        android:progress="10"
-                        android:progressDrawable="@drawable/progressbar_circle"
-                        app:layout_constraintDimensionRatio="1:1"
-                        app:layout_constraintEnd_toStartOf="@+id/progressBar4"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/progressBar2"
-                        app:layout_constraintTop_toTopOf="@+id/progressBar2" />
-
-                    <ProgressBar
-                        android:id="@+id/progressBar4"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="4dp"
-                        android:background="@drawable/progressbar_circle_background"
-                        android:max="100"
-                        android:progress="10"
-                        android:progressDrawable="@drawable/progressbar_circle"
-                        app:layout_constraintDimensionRatio="1:1"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/progressBar3"
-                        app:layout_constraintTop_toTopOf="@+id/progressBar2" />
+                        app:layout_constraintEnd_toEndOf="@+id/fragment_voc_home_pb_main"
+                        app:layout_constraintStart_toStartOf="@+id/fragment_voc_home_pb_main"
+                        app:layout_constraintTop_toBottomOf="@+id/fragment_voc_home_pb_main" />
 
                     <TextView
-                        android:id="@+id/textView37"
+                        android:id="@+id/fragment_voc_home_tv_quote"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="32dp"
                         android:text="75 %"
                         android:textColor="@color/text_main"
                         android:textSize="18sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/progressBar2"
-                        app:layout_constraintEnd_toEndOf="@+id/progressBar2"
-                        app:layout_constraintStart_toStartOf="@+id/progressBar2"
-                        app:layout_constraintTop_toTopOf="@+id/progressBar2" />
-
-                    <View
-                        android:id="@+id/divider23"
-                        android:layout_width="1dp"
-                        android:layout_height="0dp"
-                        android:background="?android:attr/listDivider"
-                        app:layout_constraintBottom_toBottomOf="@+id/progressBar2"
-                        app:layout_constraintEnd_toStartOf="@+id/progressBar3"
-                        app:layout_constraintStart_toEndOf="@+id/progressBar2"
-                        app:layout_constraintTop_toTopOf="@+id/progressBar2" />
-
-                    <View
-                        android:id="@+id/divider24"
-                        android:layout_width="1dp"
-                        android:layout_height="0dp"
-                        android:background="?android:attr/listDivider"
-                        app:layout_constraintBottom_toBottomOf="@+id/divider23"
-                        app:layout_constraintEnd_toStartOf="@+id/progressBar4"
-                        app:layout_constraintStart_toEndOf="@+id/progressBar3"
-                        app:layout_constraintTop_toTopOf="@+id/divider23" />
+                        app:layout_constraintEnd_toStartOf="@+id/fragment_voc_home_tv_itemcorrect"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/fragment_voc_home_tv_itemcorrect" />
 
                     <View
                         android:id="@+id/divider25"
@@ -219,77 +148,71 @@
                         app:layout_constraintTop_toBottomOf="@+id/textView36" />
 
                     <TextView
-                        android:id="@+id/textView38"
+                        android:id="@+id/fragment_voc_home_tv_itemcorrect"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
                         android:text="14,35"
                         android:textColor="@color/text_main"
                         android:textSize="18sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/progressBar3"
-                        app:layout_constraintEnd_toEndOf="@+id/progressBar3"
-                        app:layout_constraintStart_toStartOf="@+id/progressBar3"
-                        app:layout_constraintTop_toTopOf="@+id/progressBar3" />
+                        app:layout_constraintEnd_toStartOf="@+id/fragment_voc_home_tv_itemcount"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/fragment_voc_home_tv_quote"
+                        app:layout_constraintTop_toBottomOf="@+id/divider25" />
 
                     <TextView
-                        android:id="@+id/textView39"
+                        android:id="@+id/fragment_voc_home_tv_itemcount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
                         android:text="15,75"
                         android:textColor="@color/text_main"
                         android:textSize="18sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/progressBar4"
-                        app:layout_constraintEnd_toEndOf="@+id/progressBar4"
-                        app:layout_constraintStart_toStartOf="@+id/progressBar4"
-                        app:layout_constraintTop_toTopOf="@+id/progressBar4" />
+                        app:layout_constraintBottom_toTopOf="@+id/textView40"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintHorizontal_chainStyle="spread"
+                        app:layout_constraintStart_toEndOf="@+id/fragment_voc_home_tv_itemcorrect"
+                        app:layout_constraintTop_toTopOf="@+id/fragment_voc_home_tv_quote" />
 
                     <TextView
                         android:id="@+id/textView40"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
                         android:gravity="center"
                         android:text="Ø Bestehquote"
                         android:textColor="@color/text_sub"
                         android:textSize="10sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/progressBar2"
-                        app:layout_constraintStart_toStartOf="@+id/progressBar2"
-                        app:layout_constraintTop_toBottomOf="@+id/progressBar2" />
+                        app:layout_constraintEnd_toEndOf="@+id/fragment_voc_home_tv_quote"
+                        app:layout_constraintStart_toStartOf="@+id/fragment_voc_home_tv_quote"
+                        app:layout_constraintTop_toBottomOf="@+id/fragment_voc_home_tv_quote" />
 
                     <TextView
                         android:id="@+id/textView41"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
                         android:gravity="center"
                         android:text="Ø Anzahl Richtig"
                         android:textColor="@color/text_sub"
                         android:textSize="10sp"
-                        app:layout_constraintEnd_toEndOf="@+id/progressBar3"
-                        app:layout_constraintStart_toStartOf="@+id/progressBar3"
-                        app:layout_constraintTop_toBottomOf="@+id/progressBar3" />
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/fragment_voc_home_tv_itemcorrect"
+                        app:layout_constraintStart_toStartOf="@+id/fragment_voc_home_tv_itemcorrect"
+                        app:layout_constraintTop_toBottomOf="@+id/fragment_voc_home_tv_itemcorrect" />
 
                     <TextView
                         android:id="@+id/textView42"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="Ø Geübte Vokabeln"
                         android:textColor="@color/text_sub"
                         android:textSize="10sp"
-                        app:layout_constraintEnd_toEndOf="@+id/progressBar4"
-                        app:layout_constraintStart_toStartOf="@+id/progressBar4"
-                        app:layout_constraintTop_toBottomOf="@+id/progressBar4" />
+                        app:layout_constraintEnd_toEndOf="@+id/fragment_voc_home_tv_itemcount"
+                        app:layout_constraintStart_toStartOf="@+id/fragment_voc_home_tv_itemcount"
+                        app:layout_constraintTop_toBottomOf="@+id/fragment_voc_home_tv_itemcount" />
 
-                    <ImageButton
-                        android:id="@+id/imageButton2"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:background="?android:attr/selectableItemBackground"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView30"
-                        app:layout_constraintDimensionRatio="1f:1f"
-                        app:layout_constraintEnd_toEndOf="@+id/divider22"
-                        app:layout_constraintTop_toTopOf="@+id/textView29"
-                        app:srcCompat="@drawable/ic_info_black_24dp" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
@@ -321,7 +244,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/textView44"
+                        android:id="@+id/fragment_voc_home_tv_lastdate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Übung vom 01.04.2020 - 14:35"
@@ -331,12 +254,12 @@
                         app:layout_constraintTop_toBottomOf="@+id/textView43" />
 
                     <ImageButton
-                        android:id="@+id/imageButton3"
+                        android:id="@+id/fragment_voc_home_imagebtn_retry"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:layout_marginEnd="4dp"
                         android:background="?android:attr/selectableItemBackground"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView44"
+                        app:layout_constraintBottom_toBottomOf="@+id/fragment_voc_home_tv_lastdate"
                         app:layout_constraintDimensionRatio="1f:1f"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/textView43"
@@ -352,44 +275,24 @@
                         android:background="?android:attr/listDivider"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView44" />
+                        app:layout_constraintTop_toBottomOf="@+id/fragment_voc_home_tv_lastdate" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerView2"
+                        android:id="@+id/fragment_voc_home_rv"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
+                        android:layout_marginTop="4dp"
                         android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="4dp"
                         android:minHeight="100dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/divider26"
                         tools:itemCount="4"
                         tools:listitem="@layout/item_result_details" />
 
-                    <Button
-                        android:id="@+id/button"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="4dp"
-                        android:layout_marginBottom="4dp"
-                        android:text="Details"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/divider27"
-                        app:layout_constraintTop_toBottomOf="@+id/divider27" />
-
-                    <View
-                        android:id="@+id/divider27"
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginEnd="4dp"
-                        android:background="?android:attr/listDivider"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/recyclerView2" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 

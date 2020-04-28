@@ -6,17 +6,16 @@ import com.example.voctrainer.backend.database.converter.TestConverter
 import com.example.voctrainer.backend.database.dao.TestDao
 import com.example.voctrainer.backend.database.entities.Test
 
-
-@Database(entities = [Test::class],version = 1)
+@Database(entities = [Test::class],version = 1, exportSchema = false)
 @TypeConverters(TestConverter::class)
 abstract class TestDatabase:RoomDatabase()
 {
     abstract fun testDao():TestDao
 
-
     companion object
     {
-        private val INSTANCE:TestDatabase? = null
+        @Volatile
+        private var INSTANCE:TestDatabase? = null
 
         fun getInstance(context: Context):TestDatabase
         {

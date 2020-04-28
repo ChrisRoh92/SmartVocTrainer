@@ -26,7 +26,7 @@ interface TestDao
     @Update
     fun updateAll(tests:List<Test>)
 
-    @Query("SELECT * FROM test WHERE ID == :bookID")
+    @Query("SELECT * FROM test WHERE bookId == :bookID")
     fun getTests(bookID:Long): LiveData<List<Test>>
 
     @Query("SELECT * FROM test WHERE ID == :bookID")
@@ -37,4 +37,7 @@ interface TestDao
 
     @Query("SELECT * FROM test WHERE ID == :testID AND bookId == :bookId")
     fun getOfflineTestByID(testID:Long,bookId: Long):Test
+
+    @Query("SELECT * FROM test WHERE bookId == :bookId ORDER BY id DESC LIMIT 2 ")
+    fun getLastTest(bookId: Long):LiveData<List<Test>>
 }

@@ -14,7 +14,8 @@ abstract class SettingsDatabase:RoomDatabase()
 
     companion object
     {
-        private val INSTANCE:SettingsDatabase? = null
+        @Volatile
+        private var INSTANCE:SettingsDatabase? = null
         fun getInstance(context: Context):SettingsDatabase
         {
             synchronized(this)

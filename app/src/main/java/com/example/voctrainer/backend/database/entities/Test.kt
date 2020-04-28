@@ -1,9 +1,9 @@
 package com.example.voctrainer.backend.database.entities
 
-import androidx.room.Embedded
+
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.Relation
+
 
 // solutions: Vom Nutzer eingegebene Lösungen
 // itemsCorrect: Anzahl Korrekt (Damit das nicht jedesmal neu gerechnet werden muss)
@@ -13,16 +13,27 @@ import androidx.room.Relation
 
 @Entity
 data class Test(
-    @PrimaryKey(autoGenerate = true) val id:Long,
-    val bookId:Long,
-    var itemIds:ArrayList<Long>,
-    var solutions:ArrayList<String>,
-    var itemsCorrect:Int,
-    var result:Float,
-    var settingsID:Long)
+    @PrimaryKey(autoGenerate = true)
+    var id:Long = 0L,
+
+    var timeStamp:String = "",
+
+    var bookId:Long = 0L,
+
+    var itemIds:ArrayList<Long> = ArrayList(),
+
+    var solutions:ArrayList<String> = ArrayList(),
+
+    var itemsCorrect:Int = 2,
+
+    var result:Float = 44f,
+
+    var settingsID:Long = 0L
+)
 
 
 
+/*
 data class BookWithTests(
     @Embedded val book:Book,
     @Relation(
@@ -31,4 +42,4 @@ data class BookWithTests(
         entityColumn = "bookId"
     )
     val tests:List<Test>
-)
+)*/
