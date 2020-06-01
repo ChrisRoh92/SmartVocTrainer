@@ -30,9 +30,14 @@ interface BookDao
     @Query("SELECT * FROM Book ORDER BY id DESC")
     fun getBooks():LiveData<List<Book>>
 
+    //
+    //@Query("SELECT * FROM Book WHERE name LIKE :input ORDER BY id DESC")
+    @Query("SELECT * FROM Book WHERE name LIKE '%' || :input || '%' ORDER BY id DESC")
+    fun getFilteredBooks(input:String):List<Book>
+
+    // Offline - no LiveData:
     @Query("SELECT * FROM Book ORDER BY id DESC")
     fun getOfflineBooks():List<Book>
-
 
 
     @Query("SELECT * FROM Book WHERE name LIKE :item")

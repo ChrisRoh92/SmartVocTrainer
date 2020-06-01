@@ -3,6 +3,7 @@ package com.example.voctrainer.backend.database.dao
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.voctrainer.backend.database.entities.Book
 
 
 import com.example.voctrainer.backend.database.entities.Voc
@@ -46,6 +47,12 @@ interface VocDao
 
     @Query("SELECT * FROM Voc WHERE bookId == :bookId")
     fun getOfflineVocs(bookId:Long):List<Voc>
+
+    //@Query("SELECT * FROM Book WHERE bookId == :bookId and WHERE name LIKE '%' || :input || '%' ORDER BY id DESC")
+    @Query("SELECT * FROM Voc WHERE (`foreign` LIKE '%' || :input || '%' OR native2 LIKE '%' || :input || '%') AND (bookId == :bookId)")
+    fun getFilteredVocs(bookId:Long,input:String):List<Voc>
+
+
 
     @Query("SELECT * FROM Voc WHERE id == :vocId AND bookId == :bookId")
     fun getVocById(vocId:Long,bookId: Long): LiveData<Voc>

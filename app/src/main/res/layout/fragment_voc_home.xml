@@ -128,13 +128,11 @@
                         android:id="@+id/fragment_voc_home_tv_quote"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="32dp"
                         android:text="75 %"
                         android:textColor="@color/text_main"
                         android:textSize="18sp"
-                        app:layout_constraintEnd_toStartOf="@+id/fragment_voc_home_tv_itemcorrect"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/guideline7"
+                        app:layout_constraintStart_toStartOf="@+id/guideline7"
                         app:layout_constraintTop_toTopOf="@+id/fragment_voc_home_tv_itemcorrect" />
 
                     <View
@@ -155,24 +153,23 @@
                         android:text="14,35"
                         android:textColor="@color/text_main"
                         android:textSize="18sp"
-                        app:layout_constraintEnd_toStartOf="@+id/fragment_voc_home_tv_itemcount"
+                        app:layout_constraintEnd_toStartOf="@+id/guideline6"
                         app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/fragment_voc_home_tv_quote"
+                        app:layout_constraintStart_toStartOf="@+id/guideline6"
                         app:layout_constraintTop_toBottomOf="@+id/divider25" />
 
                     <TextView
                         android:id="@+id/fragment_voc_home_tv_itemcount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="32dp"
                         android:text="15,75"
                         android:textColor="@color/text_main"
                         android:textSize="18sp"
                         app:layout_constraintBottom_toTopOf="@+id/textView40"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintEnd_toStartOf="@+id/guideline8"
+                        app:layout_constraintHorizontal_bias="0.6"
                         app:layout_constraintHorizontal_chainStyle="spread"
-                        app:layout_constraintStart_toEndOf="@+id/fragment_voc_home_tv_itemcorrect"
+                        app:layout_constraintStart_toStartOf="@+id/guideline8"
                         app:layout_constraintTop_toTopOf="@+id/fragment_voc_home_tv_quote" />
 
                     <TextView
@@ -183,8 +180,8 @@
                         android:text="Ø Bestehquote"
                         android:textColor="@color/text_sub"
                         android:textSize="10sp"
-                        app:layout_constraintEnd_toEndOf="@+id/fragment_voc_home_tv_quote"
-                        app:layout_constraintStart_toStartOf="@+id/fragment_voc_home_tv_quote"
+                        app:layout_constraintEnd_toStartOf="@+id/guideline7"
+                        app:layout_constraintStart_toStartOf="@+id/guideline7"
                         app:layout_constraintTop_toBottomOf="@+id/fragment_voc_home_tv_quote" />
 
                     <TextView
@@ -197,8 +194,8 @@
                         android:textColor="@color/text_sub"
                         android:textSize="10sp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/fragment_voc_home_tv_itemcorrect"
-                        app:layout_constraintStart_toStartOf="@+id/fragment_voc_home_tv_itemcorrect"
+                        app:layout_constraintEnd_toStartOf="@+id/guideline6"
+                        app:layout_constraintStart_toStartOf="@+id/guideline6"
                         app:layout_constraintTop_toBottomOf="@+id/fragment_voc_home_tv_itemcorrect" />
 
                     <TextView
@@ -209,9 +206,30 @@
                         android:text="Ø Geübte Vokabeln"
                         android:textColor="@color/text_sub"
                         android:textSize="10sp"
-                        app:layout_constraintEnd_toEndOf="@+id/fragment_voc_home_tv_itemcount"
-                        app:layout_constraintStart_toStartOf="@+id/fragment_voc_home_tv_itemcount"
+                        app:layout_constraintEnd_toStartOf="@+id/guideline8"
+                        app:layout_constraintStart_toStartOf="@+id/guideline8"
                         app:layout_constraintTop_toBottomOf="@+id/fragment_voc_home_tv_itemcount" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.5" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.2" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.8" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>

@@ -39,7 +39,7 @@ class SplashFragment : Fragment() {
     private suspend fun startAnimation()
     {
         delay(2000)
-        findNavController().navigate(R.id.action_splash_intro)
+        findNavController().navigate(R.id.action_splash_main)
 
     }
 

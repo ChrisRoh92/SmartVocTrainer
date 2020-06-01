@@ -22,7 +22,7 @@
             android:orientation="vertical" >
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView7"
+                android:id="@+id/fragment_voc_statistic_card_data"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -92,7 +92,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView9"
+                android:id="@+id/fragment_voc_statistic_card_piechart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -149,7 +149,7 @@
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:layout_marginTop="4dp"
-                        app:layout_constraintDimensionRatio="2:1"
+                        app:layout_constraintDimensionRatio="3:2"
                         app:layout_constraintEnd_toEndOf="@+id/divider31"
                         app:layout_constraintStart_toStartOf="@+id/divider31"
                         app:layout_constraintTop_toBottomOf="@+id/divider31" />
@@ -262,6 +262,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/fragment_voc_statistic_card_linechart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -324,7 +325,7 @@
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="4dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintDimensionRatio="2:1"
+                        app:layout_constraintDimensionRatio="3:2"
                         app:layout_constraintEnd_toEndOf="@+id/divider33"
                         app:layout_constraintStart_toStartOf="@+id/divider33"
                         app:layout_constraintTop_toBottomOf="@+id/divider33" />

@@ -49,7 +49,13 @@ class MainRepository(val context: Context):CoroutineScope
     // Get LiveData Listen...:
     fun getBooks():LiveData<List<Book>>
     {
+
         return bookDao.getBooks()
+    }
+    fun getFilteredBooks(input:String):List<Book>
+    {
+
+        return bookDao.getFilteredBooks(input)
     }
     // Der Rest braucht die bookID, da die Settings, Vocs usw, nur von einem Book ausgegeben werden sollen
     fun getSettings(bookId:Long):LiveData<List<Setting>>
@@ -117,6 +123,11 @@ class MainRepository(val context: Context):CoroutineScope
     fun getOfflineVocs(bookId: Long):List<Voc>
     {
         return vocDao.getOfflineVocs(bookId)
+    }
+
+    fun getFilteredVocs(bookId: Long,query:String):List<Voc>
+    {
+        return vocDao.getFilteredVocs(bookId,query)
     }
 
     fun getOfflineSettings(bookId: Long):List<Setting>

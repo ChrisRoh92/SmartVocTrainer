@@ -7,5 +7,6 @@ class TestResults(var result:Float,
                   var progressResult:Float,
                   var progressItemsCorrect:Float,
                   var progressItemsFault:Float,
-                  var progressItemCount:Float) {
+                  var progressItemCount:Float,
+                  var testCount:Int) {
 }

@@ -34,7 +34,6 @@ import java.lang.Exception
         - Status von einer oder mehreren Vokabeln ändern
         - Export von ausgewählten Vokabeln als .csv
         - ...
--TODO() Suchen von Vokabeln ist nicht implementiert
 -TODO() Sortieren ist nicht implementiert
 -TODO() Filtern ist nicht implementiert
 -TODO() Lernstatus wird noch als Zahl angezeigt....
@@ -102,8 +101,9 @@ class VocDatasFragment: Fragment()
 
     private fun startObserver()
     {
-        vocViewModel.vocs.observe(viewLifecycleOwner, Observer { vocs ->
+        vocViewModel.getVocs().observe(viewLifecycleOwner, Observer { vocs ->
             adapter.updateContent(ArrayList(vocs),justContent)
+            rv.scrollToPosition(0)
             justContent = false
 
 

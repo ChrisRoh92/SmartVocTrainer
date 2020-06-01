@@ -1,6 +1,8 @@
 package com.example.voctrainer.moduls.main.fragment
 
+import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -37,7 +39,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 /*
 ****** Offene Tasks ******
-- TODO() Suche nach Vokabelheften ist nicht implementiert....
+
 - TODO() Import von Vokabelheften muss implementiert werden
 - TODO() Teilen von Vokabelheften muss implementiert werden
 - TODO() Direktes Üben mit bookId starten, muss noch implementiert werden
@@ -45,7 +47,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 ******************************************************************
  */
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), SearchView.OnQueryTextListener {
 
     // Allgemeines Stuff:
     private lateinit var rootView:View
@@ -79,7 +81,8 @@ class MainFragment : Fragment() {
         initRecyclerView()
 
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        viewModel.books!!.observe(viewLifecycleOwner, Observer { books ->
+        viewModel.books.observe(viewLifecycleOwner, Observer { books ->
+            Log.d("VocTrainer","MainFragment Book List = $books")
             adapter.submitList(books)
             adapter.submitList(books) {
                 /*layoutManager.smoothScrollToPosition(rv,null,0)*/
@@ -185,32 +188,63 @@ class MainFragment : Fragment() {
     private fun initToolBar()
     {
         toolbar = rootView.findViewById(R.id.fragment_main_toolbar)
+        toolbar.inflateMenu(R.menu.menu_main_toolbar)
         toolbar.setNavigationOnClickListener {
             var bundle = bundleOf("source" to 0)
             navController.navigate(R.id.action_global_settings,bundle)
         }
+
+        val searchItem = toolbar.menu.findItem(R.id.menu_main_search)
+        val searchView = searchItem.actionView as SearchView
+        searchView.setOnQueryTextListener(this)
+
         toolbar.setOnMenuItemClickListener {
+            Log.d("VocTrainer","MainFragment - toolbar.setOnMenuItemClickListener = ${it.itemId!!}")
             if(it.itemId == R.id.menu_main_import)
             {
+
                 var dialog = DialogImportVoc()
                 dialog.show(childFragmentManager,"")
                 dialog.setOnDialogClickListener(object:DialogImportVoc.OnDialogClickListener{
-                    override fun setOnDialogClickListener() {
-                        Toast.makeText(rootView.context,"Import erfolgreich",Toast.LENGTH_SHORT).show()
+                    override fun setOnDialogClickListener()
+                    {
+                        var intent = Intent(Intent.ACTION_GET_CONTENT)
+                        intent.type = "*/*"
+                        intent.addCategory(Intent.CATEGORY_OPENABLE)
+                        intent.putExtra(Intent.EXTRA_LOCAL_ONLY,true)
+
+                        val requestCode = 123
+                        startActivityForResult(intent,requestCode)
                     }
 
                 })
             }
-            else if(it.itemId == R.id.menu_main_search)
-            {
 
-            }
             true
         }
 
 
 
     }
+
+    // Und hier aus import, das Ganze auch entgegen nehmen...
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+            if(data?.type == "text/comma-separated-values")
+            {
+                var uriPath = data.data!!.path
+
+                val bundle = Bundle()
+                bundle.putString("uri",data.data.toString())
+                navController.navigate(R.id.action_global_csv_import, bundle)
+
+            }
+
+
+    }
+
+
 
     private fun initFab()
     {
@@ -226,6 +260,25 @@ class MainFragment : Fragment() {
 
             })
         }
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        viewModel.onFilterBookList(query!!)
+        Log.d("VocTrainer","MainFragment - onQueryTextSubmit query = ${query!!}")
+        return true
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        if(TextUtils.isEmpty(newText))
+        {
+            viewModel.onFilterBookList("")
+        }
+        else
+        {
+            Log.d("VocTrainer","MainFragment - onQueryTextChange query = ${newText!!}")
+            viewModel.onFilterBookList(newText!!)
+        }
+        return true
     }
 
 }

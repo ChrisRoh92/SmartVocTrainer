@@ -120,4 +120,22 @@
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/CSVImportFragment"
+        android:name="com.example.voctrainer.moduls.csv_handler.fragment.CSVImportFragment"
+        android:label="CSVImportFragment"
+        tools:layout="@layout/fragment_csv_import">
+        <argument
+            android:name="uri"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_csvimport_main"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_csv_import"
+        app:destination="@id/CSVImportFragment"
+        app:popUpTo="@id/mainFragment"
+        app:popUpToInclusive="true" />
 </navigation>

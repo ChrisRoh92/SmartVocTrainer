@@ -80,6 +80,17 @@ class VocHomeFragment: Fragment()
 
     }
 
+    private fun initTextViews(content:ArrayList<Float>)
+    {
+        // Untere Anzeigen:
+        tvQuote = rootView.findViewById(R.id.fragment_voc_home_tv_quote)
+        tvItemCorrect = rootView.findViewById(R.id.fragment_voc_home_tv_itemcorrect)
+        tvItemCount = rootView.findViewById(R.id.fragment_voc_home_tv_itemcount)
+
+        tvQuote.text = "%.2f ".format(content[0])+"%"
+        tvItemCorrect.text = "%.2f".format(content[1])
+        tvItemCount.text = "%.2f".format(content[2])
+    }
 
     private fun initStatusViews()
     {
@@ -87,12 +98,11 @@ class VocHomeFragment: Fragment()
         pbProgress = rootView.findViewById(R.id.fragment_voc_home_pb_main)
         tvProgress = rootView.findViewById(R.id.fragment_voc_home_tv_progress)
 
-        // Untere Anzeigen:
-        tvQuote = rootView.findViewById(R.id.fragment_voc_home_tv_quote)
-        tvItemCorrect = rootView.findViewById(R.id.fragment_voc_home_tv_itemcorrect)
-        tvItemCount = rootView.findViewById(R.id.fragment_voc_home_tv_itemcount)
+
 
     }
+
+
 
 
     private fun startObserver()
@@ -100,6 +110,7 @@ class VocHomeFragment: Fragment()
         vocViewModel.lastTwoTest.observe(viewLifecycleOwner, Observer {
 
             val testResult = vocViewModel.createTestResult(it)
+
             if(rv == null)
             {
                 initRecyclerView(testResult)
@@ -109,9 +120,11 @@ class VocHomeFragment: Fragment()
                 Log.e("VocTrainer","VocHomeFragment - startObserver() - rv != null")
                 adapter.updateContent(testResult)
             }
+        })
 
-
-
+        vocViewModel.tests.observe(viewLifecycleOwner,Observer{ tests ->
+            val testStatistic = vocViewModel.createTestStatistics(tests)
+            initTextViews(arrayListOf(testStatistic.result,testStatistic.itemCorrect,testStatistic.itemCount))
         })
 
         vocViewModel.book.observe(viewLifecycleOwner, Observer { book ->

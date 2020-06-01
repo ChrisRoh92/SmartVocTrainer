@@ -56,7 +56,7 @@ class VocHomeRecyclerViewAdapter(var testResult: TestResults):
         holder.tvMain.text = titles[position]
         holder.tvValue.text = values[position]
         changeImageView(holder.imageView,progress[position])
-        holder.tvProgress.text = "%.2f".format(progress[position]) + " %"
+        holder.tvProgress.text = "%.0f".format(progress[position]) + " %"
     }
 
     private fun changeImageView(imageView:ImageView,progress:Float)

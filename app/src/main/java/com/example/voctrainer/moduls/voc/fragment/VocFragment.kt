@@ -2,9 +2,13 @@ package com.example.voctrainer.moduls.voc.fragment
 
 
 import android.os.Bundle
+import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -20,7 +24,7 @@ import com.example.voctrainer.moduls.voc.viewmodel.VocViewModelFactory
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-class VocFragment : Fragment() {
+class VocFragment : Fragment(), SearchView.OnQueryTextListener {
 
    // Allgemeine Variablen:
     private lateinit var rootView:View
@@ -34,6 +38,7 @@ class VocFragment : Fragment() {
 
     // Toolbar:
     private var toolbar: Toolbar? = null
+    private var correctMenu = false
 
     // NotificationChannel:
 
@@ -41,6 +46,10 @@ class VocFragment : Fragment() {
     private lateinit var vocViewModel:VocViewModel
     private lateinit var vocViewModelFactory: VocViewModelFactory
     private var bookId:Long? = 0L
+    private var searchItem:MenuItem? = null
+    private var searchView:SearchView? = null
+
+
 
 
     override fun onCreateView(
@@ -147,6 +156,12 @@ class VocFragment : Fragment() {
         toolbar!!.setNavigationOnClickListener {
             findNavController().navigate(R.id.action_voc_main)
         }
+
+
+
+
+
+
         toolbar!!.setOnMenuItemClickListener {
             if(it.itemId == R.id.menu_voc_import)
             {
@@ -184,16 +199,42 @@ class VocFragment : Fragment() {
             // VocData Menu aufrufen...
             toolbar!!.menu.clear()
             toolbar!!.inflateMenu(R.menu.menu_voc_data)
+            searchItem = toolbar!!.menu.findItem(R.id.menu_voc_data_search)
+            searchView = searchItem!!.actionView as SearchView
+            searchView!!.setOnQueryTextListener(this)
         }
         else if(newPos != 1 && oldPos == 1)
         {
             toolbar!!.menu.clear()
             toolbar!!.inflateMenu(R.menu.menu_voc_toolbar)
+
+
+
+
         }
     }
 
-
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        vocViewModel.onFilterVocs(query!!)
+        Log.d("VocTrainer","VocFragment - onQueryTextSubmit query = ${query!!}")
+        return true
     }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        if(TextUtils.isEmpty(newText))
+        {
+            vocViewModel.onFilterVocs("")
+        }
+        else
+        {
+            Log.d("VocTrainer","VocFragment - onQueryTextChange query = ${newText!!}")
+            vocViewModel.onFilterVocs(newText!!)
+        }
+        return true
+    }
+
+
+}
 
 
 

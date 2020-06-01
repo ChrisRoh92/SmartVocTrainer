@@ -3,6 +3,7 @@ package com.example.voctrainer.moduls.voc.viewmodel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.voctrainer.backend.database.entities.Book
 import com.example.voctrainer.backend.database.entities.Test
@@ -10,6 +11,7 @@ import com.example.voctrainer.backend.database.entities.Voc
 import com.example.voctrainer.backend.repository.MainRepository
 import com.example.voctrainer.createCurrentTimeStamp
 import com.example.voctrainer.moduls.voc.utils.TestResults
+import com.example.voctrainer.moduls.voc.utils.TestStatistic
 import kotlinx.coroutines.*
 import kotlin.random.Random
 
@@ -24,24 +26,56 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
 
     // Alle Vokabeln:
     var book = mainRep.getBookById(bookId)
-    var vocs = mainRep.getVocs(bookId)
+    var vocs:MutableLiveData<List<Voc>> = MutableLiveData()
     var tests = mainRep.getTest(bookId)
     var lastTwoTest = mainRep.getLastTest(bookId)
+
+    // Extra Data
+    var vocStatusValues:MutableLiveData<ArrayList<Int>> = MutableLiveData()
 
 
     // Lokale Live Daten:
     var liveBook:MutableLiveData<Book> = MutableLiveData()
     init {
+        createVocStatusValues()
         uiScope.launch {
             withContext(Dispatchers.IO)
             {
                 liveBook.postValue(mainRep.getOfflineBookById(bookId))
+                vocs.postValue(mainRep.getOfflineVocs(bookId))
             }
         }
 
-
     }
 
+    // Genaue Daten abfragen...
+    fun createVocStatusValues()
+    {
+        uiScope.launch {
+            withContext(Dispatchers.IO)
+            {
+                var values = arrayListOf(0,0,0)
+                if(vocs.value == null)
+                {
+                    var localVoc = mainRep.getOfflineVocs(bookId)
+
+                    for (i in localVoc)
+                    {
+                        values[i.status]++
+                    }
+                }
+                else
+                {
+                    for (i in vocs.value!!)
+                    {
+                        values[i.status]++
+                    }
+                }
+
+                vocStatusValues.postValue(values)
+            }
+        }
+    }
 
 
 
@@ -59,16 +93,11 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
             val result = Random.nextInt(0,3)
             mainRep.insertNewVoc(Voc(0L,bookId,vocNative,vocForeign,result ,"-"))
             mainRep.updateBookWithNewData(bookId)
-            /*if(liveBook.value != null)
+            createVocStatusValues()
+            withContext(Dispatchers.IO)
             {
-                val book = liveBook.value
-                book!!.vocCount.plus(1)
-                if(result < 2)
-                    book!!.vocUnLearned.plus(1)
-                else
-                    book!!.vocLearned.plus(1)
-                liveBook.postValue(book)
-            }*/
+                vocs.postValue(mainRep.getOfflineVocs(bookId))
+            }
 
 
         }
@@ -79,6 +108,11 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
         uiScope.launch {
             mainRep.deleteVoc(voc)
             mainRep.updateBookWithNewData(bookId)
+            createVocStatusValues()
+            withContext(Dispatchers.IO)
+            {
+                vocs.postValue(mainRep.getOfflineVocs(bookId))
+            }
         }
     }
     // Vokabeln updaten:
@@ -86,9 +120,40 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
     {
         uiScope.launch {
             mainRep.updateVoc(voc)
-            vocs = mainRep.getVocs(bookId)
+            createVocStatusValues()
+            withContext(Dispatchers.IO)
+            {
+                vocs.postValue(mainRep.getOfflineVocs(bookId))
+            }
 
         }
+    }
+
+    fun onFilterVocs(query:String)
+    {
+        uiScope.launch {
+            withContext(Dispatchers.IO)
+            {
+                Log.d("VocTrainer","VocViewModel - bookId = $bookId")
+                if(query.isNotBlank() || query.isNotEmpty())
+                {
+                    Log.d("VocTrainer","VocViewModel - query.isNotBlank() query = $query")
+                    vocs.postValue(mainRep.getFilteredVocs(bookId,query))
+                }
+                else
+                {
+                    Log.d("VocTrainer","VocViewModel - query.isBlank() query = $query")
+                    vocs.postValue(mainRep.getFilteredVocs(bookId,query))
+                }
+
+                for(i in vocs.value!!)
+                {
+                    Log.d("VocTrainer","VocViewModel - onFilterVocs vocs = ${i}")
+                }
+
+            }
+        }
+
     }
 
     fun onAddNewTest()
@@ -130,12 +195,12 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
     {
         if(tests.size >= 2 && tests.isNotEmpty())
         {
-            val progressResult = (tests[0].result-tests[1].result)/tests[1].result
-            val progressCorrect = (tests[0].itemsCorrect-tests[1].itemsCorrect)/tests[1].itemsCorrect.toFloat()
-            val progressItemCount = (tests[0].itemIds.size-tests[1].itemIds.size)/tests[1].itemIds.size.toFloat()
+            val progressResult = ((tests[0].result-tests[1].result)/tests[1].result)*100
+            val progressCorrect = ((tests[0].itemsCorrect-tests[1].itemsCorrect)/tests[1].itemsCorrect.toFloat())*100
+            val progressItemCount = ((tests[0].itemIds.size-tests[1].itemIds.size)/tests[1].itemIds.size.toFloat())*100
             val oldItemsFault = tests[1].itemIds.size - tests[1].itemsCorrect
             val newItemsFault = tests[0].itemIds.size - tests[0].itemsCorrect
-            val progressFault = (newItemsFault-oldItemsFault)/newItemsFault.toFloat()
+            val progressFault = ((newItemsFault-oldItemsFault)/newItemsFault.toFloat())*100
 
             return TestResults(tests[0].result,
                 tests[0].itemsCorrect,
@@ -144,7 +209,8 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
                 progressResult,
                 progressCorrect,
                 progressFault,
-                progressItemCount)
+                progressItemCount,
+                tests.size)
         }
         else if(tests.size == 1)
         {
@@ -155,19 +221,68 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
                 tests[0].itemsCorrect,
                 newItemsFault,
                 tests[0].itemIds.size,
-                999f,
-                999f,
-                999f,
-                999f)
+                99f,
+                99f,
+                99f,
+                99f,
+                tests.size)
         }
         else
         {
-            return TestResults(0f,0,0,0,0f,0f,0f,0f)
+            return TestResults(0f,0,0,0,0f,0f,0f,0f,0)
         }
 
 
 
 
+    }
+
+    // Function to get Statistics over all done Tests
+    fun createTestStatistics(tests:List<Test>): TestStatistic
+    {
+        if(tests.isNullOrEmpty())
+        {
+            return TestStatistic(0,0f,0f,0f,0f)
+        }
+        else
+        {
+            var testCount = 0
+            var result = 0f
+            var itemCount = 0f
+            var itemCorrect = 0f
+            var itemFault = 0f
+            for(i in tests)
+            {
+                testCount++
+                result += i.result
+                itemCount += i.solutions.size
+                itemCorrect += i.itemsCorrect
+                itemFault += (i.solutions.size - i.itemsCorrect)
+
+            }
+
+            val size = (tests.size.toFloat())
+            result /= size
+            itemCount /= size
+            itemCorrect /= size
+            itemFault /= size
+
+            return TestStatistic(testCount,result,itemCount,itemCorrect,itemFault)
+        }
+
+    }
+
+    // Get LiveData:
+
+    fun getVocStatusValues():LiveData<ArrayList<Int>>
+    {
+        return vocStatusValues
+    }
+
+
+    fun getVocs():LiveData<List<Voc>>
+    {
+        return vocs
     }
 
 
