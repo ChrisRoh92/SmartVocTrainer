@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.voctrainer.backend.database.entities.Book
+import com.example.voctrainer.backend.database.entities.Setting
 import com.example.voctrainer.backend.database.entities.Test
 import com.example.voctrainer.backend.database.entities.Voc
 import com.example.voctrainer.backend.repository.MainRepository
@@ -26,9 +27,17 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
 
     // Alle Vokabeln:
     var book = mainRep.getBookById(bookId)
+
+    // Vokabeln
     var vocs:MutableLiveData<List<Voc>> = MutableLiveData()
+
+    // Test Stuff
     var tests = mainRep.getTest(bookId)
     var lastTwoTest = mainRep.getLastTest(bookId)
+
+    // Settings
+    var settings = mainRep.getSettings(bookId)
+
 
     // Extra Data
     var vocStatusValues:MutableLiveData<ArrayList<Int>> = MutableLiveData()
@@ -156,7 +165,25 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
 
     }
 
-    fun onAddNewTest()
+    // VocPractise:
+    fun onAddNewSetting(itemCount:Int,timeMode:Boolean,time:Long,practiseMode:Boolean,settingsMode:Int)
+    {
+        uiScope.launch {
+            mainRep.insertNewSettings(Setting(0,bookId,itemCount,timeMode,time,practiseMode,settingsMode))
+        }
+    }
+    fun onUpdateSetting(newSetting:Setting)
+    {
+        uiScope.launch {
+            mainRep.updateSetting(newSetting)
+        }
+    }
+
+
+
+
+    // TODO(): Kommt in das ViewModel vom Practise Modul!
+    fun onAddNewTest(itemsIds:ArrayList<Long>,solutions:ArrayList<String>,results:Float)
     {
         uiScope.launch {
             /*val test =
@@ -165,7 +192,15 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
 
         }
     }
+    // TODO(): Kommt in das ViewModel vom Practise Modul!
+    fun onDeleteTest(test:Test)
+    {
+        uiScope.launch {
+            mainRep.deleteTest(test)
+        }
+    }
 
+    // TODO() -> Wird entfernt wenn alles funkt
     private fun getItemIds():ArrayList<Long>
     {
         var results:ArrayList<Long> = ArrayList()
@@ -176,7 +211,7 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
 
         return results
     }
-
+    // TODO() -> Wird entfernt wenn alles funkt
     private fun getSolutions():ArrayList<String>
     {
         var solutions:ArrayList<String> = ArrayList()
@@ -189,7 +224,7 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
     }
 
 
-    // Erstellung Side Stuff:
+
     // VocHomeFragment:
     fun createTestResult(tests:List<Test>):TestResults
     {
@@ -237,6 +272,7 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
 
     }
 
+    // VocStatisticFragment
     // Function to get Statistics over all done Tests
     fun createTestStatistics(tests:List<Test>): TestStatistic
     {
@@ -272,13 +308,12 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
 
     }
 
-    // Get LiveData:
 
+    // Get Mutable LiveData:
     fun getVocStatusValues():LiveData<ArrayList<Int>>
     {
         return vocStatusValues
     }
-
 
     fun getVocs():LiveData<List<Voc>>
     {

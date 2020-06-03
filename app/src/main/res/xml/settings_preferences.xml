@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Erinnerungs Einstellungen">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="preference_set_alarm_switch"
+            android:title="Alarm Einschalten" />
+
+        <Preference
+            android:defaultValue="18:00"
+            android:key="preference_set_alarm_time"
+            android:summary="Lege die Zeit für die Erinnerungfest"
+            android:title="Alarm Zeit"
+             />
+
+        <MultiSelectListPreference
+            app:key="preference_set_alarm_daylist"
+            app:title="Tage auswählen"
+            app:summary="Tage auswählen"
+            app:entries="@array/entries"
+            app:entryValues="@array/entry_values"
+            app:dialogTitle="Tage auswählen"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Allgemeine Einstellungen">
+
+        <Preference
+
+            android:key="edit_text_preference_1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="App Daten zurücksetzen" />
+        <Preference
+
+            android:key="edit_text_preference_1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Alle Daten exportieren" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Teilen und Weiterempfehlen">
+
+        <Preference
+
+            android:key="edit_text_preference_1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Link zum App Store teilen" />
+        <Preference
+
+            android:key="edit_text_preference_1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="App im Store bewerten" />
+        <Preference
+
+            android:key="edit_text_preference_1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Was willste hier Christoph?" />
+
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Datenschutz und Lizenzen">
+
+        <Preference
+
+            android:key="edit_text_preference_1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Datenschutzerklärung (DSVGO)" />
+        <Preference
+
+            android:key="edit_text_preference_1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Lizenzen anzeigen" />
+
+
+    </PreferenceCategory>
+
+
+
+
+
+</PreferenceScreen>

@@ -27,7 +27,7 @@ class MainRecyclerViewListAdapter:
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_main_voc,parent,false)
-        return ViewHolder(view)
+        return ViewHolder(view,this,mShowListener,mPractiseListener,mDeleteListener,mShareListener)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -47,33 +47,7 @@ class MainRecyclerViewListAdapter:
         holder.pbProgress.progress = progress
 
 
-        holder.btnShow.setOnClickListener {
-            if(mShowListener!=null)
-            {
-                mShowListener.setOnAdapterShowButtonClick(book.id)
-            }
-        }
 
-        holder.btnPractise.setOnClickListener {
-            if(mPractiseListener!=null)
-            {
-                mPractiseListener.setOnAdapterPractiseButtonClick(holder.adapterPosition)
-            }
-        }
-
-        holder.btnDelete.setOnClickListener {
-            if(mDeleteListener!=null)
-            {
-                mDeleteListener.setOnAdapterDeleteButtonClick(book)
-            }
-        }
-
-        holder.btnShare.setOnClickListener {
-            if(mShareListener!=null)
-            {
-                mShareListener.setOnAdapterShareButtonClick(holder.adapterPosition)
-            }
-        }
     }
 
 
@@ -99,7 +73,13 @@ class MainRecyclerViewListAdapter:
 
 
 
-    class ViewHolder(itemView:View) :RecyclerView.ViewHolder(itemView)
+    class ViewHolder(itemView:View,
+                     adapter:MainRecyclerViewListAdapter,
+                     mShowListener:OnAdapterShowButtonClick,
+                     mPractiseListener:OnAdapterPractiseButtonClick,
+                     mDeleteListener:OnAdapterDeleteButtonClick,
+                     mShareListener:OnAdapterShareButtonClick
+    ) :RecyclerView.ViewHolder(itemView)
     {
         // Alle Buttons
         var btnShow: Button = itemView.findViewById(R.id.item_voc_btn_show)
@@ -117,7 +97,33 @@ class MainRecyclerViewListAdapter:
         var pbProgress: ProgressBar = itemView.findViewById(R.id.item_voc_sk)
 
         init {
-            pbProgress.max = 100
+            btnShow.setOnClickListener {
+                if(mShowListener!=null)
+                {
+                    mShowListener.setOnAdapterShowButtonClick(adapter.getItem(adapterPosition).id)
+                }
+            }
+
+            btnPractise.setOnClickListener {
+                if(mPractiseListener!=null)
+                {
+                    mPractiseListener.setOnAdapterPractiseButtonClick(adapterPosition)
+                }
+            }
+
+            btnDelete.setOnClickListener {
+                if(mDeleteListener!=null)
+                {
+                    mDeleteListener.setOnAdapterDeleteButtonClick(adapter.getItem(adapterPosition))
+                }
+            }
+
+            btnShare.setOnClickListener {
+                if(mShareListener!=null)
+                {
+                    mShareListener.setOnAdapterShareButtonClick(adapterPosition)
+                }
+            }
 
         }
     }

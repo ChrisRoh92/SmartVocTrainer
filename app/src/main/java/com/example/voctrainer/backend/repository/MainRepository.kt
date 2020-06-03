@@ -101,12 +101,12 @@ class MainRepository(val context: Context):CoroutineScope
     fun getLastVoc(bookId: Long):LiveData<Voc>
     {
 
-    }
-
-    fun getLastSettings(bookId: Long):LiveData<Setting>
-    {
-
     }*/
+
+    fun getLastSettings(bookId: Long):Setting
+    {
+        return settingsDao.getLastSetting(bookId)
+    }
 
     fun getLastTest(bookId: Long):LiveData<List<Test>>
     {

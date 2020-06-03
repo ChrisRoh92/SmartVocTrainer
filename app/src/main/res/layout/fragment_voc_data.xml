@@ -36,7 +36,7 @@
                 android:layout_marginTop="4dp"
                 android:text="Vokabeln"
                 android:textColor="@color/text_main"
-                android:textSize="18sp"
+                android:textSize="22sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

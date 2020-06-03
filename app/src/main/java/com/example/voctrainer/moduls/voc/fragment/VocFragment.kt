@@ -30,7 +30,7 @@ class VocFragment : Fragment(), SearchView.OnQueryTextListener {
     private lateinit var rootView:View
 
     // Stuff für den ViewPager2:
-    private lateinit var viewPager2: ViewPager2
+    lateinit var viewPager2: ViewPager2
     private lateinit var adapter:VocStateAdapter
     private lateinit var tabLayout:TabLayout
     private val tabText:ArrayList<String> = arrayListOf("Home","Vokabeln","Üben","Statistik")
@@ -93,7 +93,7 @@ class VocFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         bookId = arguments?.getLong("bookId",0L)
-        vocViewModelFactory = VocViewModelFactory(bookId!!,activity!!.application)
+        vocViewModelFactory = VocViewModelFactory(bookId!!,requireActivity().application)
         vocViewModel = ViewModelProvider(this,vocViewModelFactory).get(VocViewModel::class.java)
         startObserver()
 
@@ -183,6 +183,7 @@ class VocFragment : Fragment(), SearchView.OnQueryTextListener {
             }
             else if (it.itemId == R.id.menu_voc_settings)
             {
+
 
 
             }

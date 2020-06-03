@@ -6,7 +6,6 @@ import android.text.TextUtils
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.SearchEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
@@ -14,11 +13,8 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 
 import androidx.core.os.bundleOf
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.example.voctrainer.R
 import com.example.voctrainer.backend.database.entities.Book
-import com.example.voctrainer.moduls.main.adapter.MainRecyclerViewAdapter
 import com.example.voctrainer.moduls.main.adapter.MainRecyclerViewListAdapter
 import com.example.voctrainer.moduls.main.dialogs.DialogImportVoc
 import com.example.voctrainer.moduls.main.dialogs.DialogNewVoc
@@ -43,7 +38,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 - TODO() Import von Vokabelheften muss implementiert werden
 - TODO() Teilen von Vokabelheften muss implementiert werden
 - TODO() Direktes Üben mit bookId starten, muss noch implementiert werden
-- TODO() Zwei mal zurück klicken, damit App beendet wird...
+
 ******************************************************************
  */
 
@@ -114,6 +109,8 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
 
 
 
+
+
     // Create RecyclerView
     private fun initRecyclerView()
     {
@@ -122,6 +119,7 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
         adapter = MainRecyclerViewListAdapter()
         rv.layoutManager = layoutManager
         rv.adapter = adapter
+        rv.setHasFixedSize(true)
 
 
         initAdapterListener()
@@ -190,8 +188,9 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
         toolbar = rootView.findViewById(R.id.fragment_main_toolbar)
         toolbar.inflateMenu(R.menu.menu_main_toolbar)
         toolbar.setNavigationOnClickListener {
-            var bundle = bundleOf("source" to 0)
-            navController.navigate(R.id.action_global_settings,bundle)
+//            var bundle = bundleOf("source" to 0)
+//            navController.navigate(R.id.action_,bundle)
+            navController.navigate(R.id.action_main_settings)
         }
 
         val searchItem = toolbar.menu.findItem(R.id.menu_main_search)
@@ -262,6 +261,8 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
         }
     }
 
+
+    // From SearchVIew
     override fun onQueryTextSubmit(query: String?): Boolean {
         viewModel.onFilterBookList(query!!)
         Log.d("VocTrainer","MainFragment - onQueryTextSubmit query = ${query!!}")

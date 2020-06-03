@@ -23,9 +23,7 @@ class VocDataRecyclerViewAdapter(var content:ArrayList<Voc>):
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_voc_datas_content,parent,false)
-        return ViewHolder(
-            view
-        )
+        return ViewHolder(view,this,mListener,mLongListener)
     }
 
     override fun getItemCount(): Int {
@@ -40,19 +38,6 @@ class VocDataRecyclerViewAdapter(var content:ArrayList<Voc>):
         holder.tvDate.text = voc.lastPractiseDate
         holder.image.setImageResource(imageList[voc.status])
 
-        holder.itemView.setOnClickListener {
-            if(mListener!=null)
-            {
-                mListener.setOnItemClickListener(content[holder.adapterPosition])
-            }
-        }
-        holder.itemView.setOnLongClickListener {
-            if(mLongListener!=null)
-            {
-                mLongListener.setOnItemLongClickListener(content[holder.adapterPosition])
-            }
-            true
-        }
 
     }
 
@@ -76,12 +61,23 @@ class VocDataRecyclerViewAdapter(var content:ArrayList<Voc>):
 
 
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class ViewHolder(itemView: View,adapter:VocDataRecyclerViewAdapter,mListener:OnItemClickListener,mLongListener:OnItemLongClickListener) : RecyclerView.ViewHolder(itemView)
     {
         var tvTitle:TextView = itemView.findViewById(R.id.item_voc_content_tv_title)
         var tvSubtitle:TextView = itemView.findViewById(R.id.item_voc_content_tv_subtitle)
         var tvDate:TextView = itemView.findViewById(R.id.item_voc_content_tv_date)
         var image:ImageView = itemView.findViewById(R.id.item_voc_content_image)
+
+        init {
+            itemView.setOnClickListener {
+                mListener?.setOnItemClickListener(adapter.content[adapterPosition])
+            }
+
+            itemView.setOnLongClickListener {
+                mLongListener?.setOnItemLongClickListener(adapter.content[adapterPosition])
+                true
+            }
+        }
     }
 
     interface OnItemClickListener

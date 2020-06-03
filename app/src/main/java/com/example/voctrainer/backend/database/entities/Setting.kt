@@ -18,7 +18,7 @@ data class Setting(@PrimaryKey(autoGenerate = true) val id:Long,
                    val itemCount:Int,
                    val timeMode:Boolean = false,
                    val time:Long = 0L,
-                   val practiseMod:Int = 0,
+                   val practiseMod:Boolean = false,
                    val settingsMode:Int = 0)
 
 

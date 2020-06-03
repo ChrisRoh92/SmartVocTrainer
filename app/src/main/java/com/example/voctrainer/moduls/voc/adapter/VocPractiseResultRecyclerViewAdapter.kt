@@ -17,6 +17,7 @@ class VocPractiseResultRecyclerViewAdapter(var content:ArrayList<Test>):
 
     // Interface:
     private lateinit var mListener:OnItemClickListener
+    private lateinit var mRepeatListener:OnRepeatClickListener
 
 
 
@@ -24,9 +25,7 @@ class VocPractiseResultRecyclerViewAdapter(var content:ArrayList<Test>):
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_voc_practise_verlauf,parent,false)
-        return ViewHolder(
-            view
-        )
+        return ViewHolder(view,this,mListener,mRepeatListener)
     }
 
     override fun getItemCount(): Int {
@@ -43,13 +42,6 @@ class VocPractiseResultRecyclerViewAdapter(var content:ArrayList<Test>):
         holder.tvDate.text = "Übung vom ${test.timeStamp.subSequence(0,11)}"
         holder.tvTime.text = "${test.timeStamp.subSequence(13,18)}"
 
-
-
-
-
-        holder.itemView.setOnClickListener {
-            mListener.setOnItemClickListener(holder.adapterPosition)
-        }
 
     }
 
@@ -78,7 +70,10 @@ class VocPractiseResultRecyclerViewAdapter(var content:ArrayList<Test>):
     }
 
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class ViewHolder(itemView: View,
+                     adapter:VocPractiseResultRecyclerViewAdapter,
+                     mListener:OnItemClickListener,
+                     mRepeatListener:OnRepeatClickListener) : RecyclerView.ViewHolder(itemView)
     {
         // TextView:
         var tvDate:TextView = itemView.findViewById(R.id.item_voc_practise_result_tv_date)
@@ -91,7 +86,19 @@ class VocPractiseResultRecyclerViewAdapter(var content:ArrayList<Test>):
         var imageIcon:ImageView = itemView.findViewById(R.id.item_voc_practise_result_image_icon)
         // ImageButton:
         var btnRepeat:ImageButton = itemView.findViewById(R.id.item_voc_practise_result_btn_repeat)
+
+        init {
+            itemView.setOnClickListener {
+                mListener.setOnItemClickListener(adapterPosition)
+            }
+
+            btnRepeat.setOnClickListener {
+                mRepeatListener.setOnRepeatClickListener(adapterPosition)
+            }
+        }
     }
+
+
 
     interface OnItemClickListener
     {
@@ -100,5 +107,15 @@ class VocPractiseResultRecyclerViewAdapter(var content:ArrayList<Test>):
     fun setOnItemClickListener(mListener:OnItemClickListener)
     {
         this.mListener = mListener
+    }
+
+    interface OnRepeatClickListener
+    {
+        fun setOnRepeatClickListener(pos:Int)
+    }
+
+    fun setOnRepeatClickListener(mRepeatListener:OnRepeatClickListener)
+    {
+        this.mRepeatListener = mRepeatListener
     }
 }

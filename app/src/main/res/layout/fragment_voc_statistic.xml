@@ -44,7 +44,7 @@
                         android:layout_marginTop="4dp"
                         android:text="Statistik"
                         android:textColor="@color/text_main"
-                        android:textSize="18sp"
+                        android:textSize="22sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -115,7 +115,7 @@
                         android:layout_marginTop="4dp"
                         android:text="Überblick Status Vokabeln"
                         android:textColor="@color/text_main"
-                        android:textSize="18sp"
+                        android:textSize="22sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -288,9 +288,9 @@
                         android:layout_marginStart="4dp"
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="4dp"
-                        android:text="Verlauf der Ergebnisse der Übungen"
+                        android:text="Verlauf Ergebnisse"
                         android:textColor="@color/text_main"
-                        android:textSize="18sp"
+                        android:textSize="22sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />

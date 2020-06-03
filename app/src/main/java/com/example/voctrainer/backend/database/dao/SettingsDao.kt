@@ -41,6 +41,9 @@ interface SettingsDao
     @Query("SELECT * FROM setting WHERE id == :settingsID AND bookId == :bookId")
     fun getOfflineSettingsByID(settingsID:Long,bookId: Long):Setting
 
+    @Query("SELECT * FROM setting WHERE bookId == :bookId ORDER BY id DESC LIMIT 1 ")
+    fun getLastSetting(bookId: Long):Setting
+
 
 
 }

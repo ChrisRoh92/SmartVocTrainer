@@ -15,6 +15,11 @@
             app:destination="@id/vocFragment"
             app:enterAnim="@anim/pop_in"
             app:exitAnim="@anim/pop_out" />
+        <action
+            android:id="@+id/action_main_settings"
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/slide_out" />
     </fragment>
     <fragment
         android:id="@+id/vocFragment"
@@ -33,21 +38,6 @@
             app:argType="long"
             android:defaultValue="0L" />
     </fragment>
-    <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.example.voctrainer.moduls.settings.fragments.SettingsFragment"
-        android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" >
-        <argument
-            android:name="source"
-            app:argType="integer"
-            android:defaultValue="0" />
-        <action
-            android:id="@+id/action_setting_main"
-            app:destination="@id/mainFragment"
-            app:enterAnim="@anim/pop_in"
-            app:exitAnim="@anim/pop_out" />
-    </fragment>
     <navigation
         android:id="@+id/nested_practise"
         app:startDestination="@id/practiseFragment" >
@@ -58,7 +48,13 @@
             tools:layout="@layout/fragment_practise">
             <action
                 android:id="@+id/action_practise_result"
-                app:destination="@id/practiseResultFragment" />
+                app:destination="@id/practiseResultFragment"
+                app:enterAnim="@anim/slide_in"
+                app:exitAnim="@anim/slide_out"
+                app:popEnterAnim="@anim/pop_in"
+                app:popExitAnim="@anim/pop_out"
+                app:popUpTo="@id/practiseFragment"
+                app:popUpToInclusive="true" />
         </fragment>
         <fragment
             android:id="@+id/practiseResultFragment"
@@ -70,22 +66,23 @@
                 app:destination="@id/vocFragment" />
             <action
                 android:id="@+id/action_result_practise"
-                app:destination="@id/practiseFragment" />
+                app:destination="@id/practiseFragment"
+                app:enterAnim="@anim/slide_in"
+                app:exitAnim="@anim/slide_out"
+                app:popEnterAnim="@anim/pop_in"
+                app:popExitAnim="@anim/pop_out"
+                app:popUpTo="@id/practiseResultFragment"
+                app:popUpToInclusive="true" />
         </fragment>
         <action android:id="@+id/action_global_result" app:destination="@id/practiseResultFragment" />
     </navigation>
     <action
         android:id="@+id/action_global_nested_practise"
         app:destination="@id/nested_practise"
-        app:enterAnim="@anim/pop_in"
-        app:exitAnim="@anim/pop_out"
-        app:popUpTo="@id/mainFragment"
-        app:popUpToInclusive="true" />
-    <action
-        android:id="@+id/action_global_settings"
-        app:destination="@id/settingsFragment"
         app:enterAnim="@anim/slide_in"
-        app:exitAnim="@anim/slide_out" />
+        app:exitAnim="@anim/slide_out"
+        app:popEnterAnim="@anim/pop_in"
+        app:popExitAnim="@anim/pop_out" />
     <action android:id="@+id/action_global_voc" app:destination="@id/vocFragment" />
     <fragment
         android:id="@+id/introFragment"
@@ -138,4 +135,19 @@
         app:destination="@id/CSVImportFragment"
         app:popUpTo="@id/mainFragment"
         app:popUpToInclusive="true" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.voctrainer.moduls.settings.fragments.FragmentSettings"
+        android:label="FragmentVocSettings"
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_settings_main"
+            app:destination="@id/mainFragment"
+            app:enterAnim="@anim/pop_in"
+            app:exitAnim="@anim/pop_out"
+            app:popEnterAnim="@anim/pop_in"
+            app:popExitAnim="@anim/pop_out"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

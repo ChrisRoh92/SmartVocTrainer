@@ -45,7 +45,7 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_settings, container, false)
+        rootView = inflater.inflate(R.layout.fragment_settings_old, container, false)
         source = arguments?.getInt("source")!!
         initToolBar()
         initRecyclerView()
@@ -59,18 +59,7 @@ class SettingsFragment : Fragment() {
     private fun initToolBar()
     {
         toolbar = rootView.findViewById(R.id.fragment_settings_toolbar)
-        toolbar.setNavigationOnClickListener {
-            if(source == 0)
-            {
-                findNavController().navigate(R.id.action_setting_main)
-            }
-            else
-            {
-                findNavController().navigate(R.id.action_global_settings)
-            }
 
-
-        }
 
     }
 
