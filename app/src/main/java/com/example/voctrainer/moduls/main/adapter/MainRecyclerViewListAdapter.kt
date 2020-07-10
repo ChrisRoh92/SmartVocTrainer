@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ProgressBar
@@ -26,17 +27,17 @@ class MainRecyclerViewListAdapter:
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_main_voc,parent,false)
-        return ViewHolder(view,this,mShowListener,mPractiseListener,mDeleteListener,mShareListener)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_main_2,parent,false)
+        return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val book = getItem(position)
-        val progress = getProgress(book.vocCount,book.vocLearned)
-        Log.e("VocTrainer","MainRecyclerViewAdapter.kt onBindViewHolder progress = $progress")
+        val progress = book.vocLearned
+
 
         holder.tvTitle.text = book.name
-        holder.tvSubTitle.text = book.timeStamp
+        holder.tvSubTitle.text = "Erstellt am: ${book.timeStamp}"
 
         // Progress:
         holder.tvProgress.text = "$progress %"
@@ -44,7 +45,16 @@ class MainRecyclerViewListAdapter:
         holder.tvVocs.text = "${book.vocCount}"
         holder.tvVocsOpen.text = "${book.vocUnLearned}"
         holder.tvVocsLearned.text = "${book.vocLearned}"
-        holder.pbProgress.progress = progress
+
+        holder.itemView.setOnClickListener { mShowListener?.setOnAdapterShowButtonClick(getItem(holder.adapterPosition).id) }
+        holder.itemView.setOnLongClickListener {
+            mDeleteListener?.setOnAdapterDeleteButtonClick(getItem(holder.adapterPosition))
+            true
+        }
+
+
+
+
 
 
 
@@ -58,74 +68,24 @@ class MainRecyclerViewListAdapter:
 
 
 
-    fun getProgress(vocCount:Int,vocLearned:Int):Int
-    {
-        return if(vocCount == 0)
-        {
-            0
-        }
-        else
-        {
-            ((vocLearned.toFloat()/vocCount)*100).roundToInt()
-        }
-    }
 
 
 
 
-    class ViewHolder(itemView:View,
-                     adapter:MainRecyclerViewListAdapter,
-                     mShowListener:OnAdapterShowButtonClick,
-                     mPractiseListener:OnAdapterPractiseButtonClick,
-                     mDeleteListener:OnAdapterDeleteButtonClick,
-                     mShareListener:OnAdapterShareButtonClick
-    ) :RecyclerView.ViewHolder(itemView)
+
+    class ViewHolder(itemView:View) :RecyclerView.ViewHolder(itemView)
     {
         // Alle Buttons
-        var btnShow: Button = itemView.findViewById(R.id.item_voc_btn_show)
-        var btnPractise: Button = itemView.findViewById(R.id.item_voc_btn_practise)
-        var btnDelete: Button = itemView.findViewById(R.id.item_voc_btn_delete)
-        var btnShare: ImageButton = itemView.findViewById(R.id.item_voc_btn_share)
         // TextViews:
-        var tvTitle: TextView = itemView.findViewById(R.id.item_voc_tv_title)
-        var tvSubTitle: TextView = itemView.findViewById(R.id.item_voc_tv_subtitle)
-        var tvProgress: TextView = itemView.findViewById(R.id.item_voc_tv_progress)
-        var tvVocsOpen: TextView = itemView.findViewById(R.id.item_voc_tv_voc_offen)
-        var tvVocs: TextView = itemView.findViewById(R.id.item_voc_tv_voc_anzahl)
-        var tvVocsLearned: TextView = itemView.findViewById(R.id.item_voc_tv_voc_gelernt)
-        // ProgressBar
-        var pbProgress: ProgressBar = itemView.findViewById(R.id.item_voc_sk)
+        var tvTitle: TextView = itemView.findViewById(R.id.item_tv_title)
+        var tvSubTitle: TextView = itemView.findViewById(R.id.item_tv_subtitle)
+        var tvProgress: TextView = itemView.findViewById(R.id.item_tv_progress)
+        var tvVocsOpen: TextView = itemView.findViewById(R.id.item_tv_vocs_nlearned)
+        var tvVocs: TextView = itemView.findViewById(R.id.item_tv_vocs)
+        var tvVocsLearned: TextView = itemView.findViewById(R.id.item_tv_vocs_learned)
 
-        init {
-            btnShow.setOnClickListener {
-                if(mShowListener!=null)
-                {
-                    mShowListener.setOnAdapterShowButtonClick(adapter.getItem(adapterPosition).id)
-                }
-            }
 
-            btnPractise.setOnClickListener {
-                if(mPractiseListener!=null)
-                {
-                    mPractiseListener.setOnAdapterPractiseButtonClick(adapterPosition)
-                }
-            }
 
-            btnDelete.setOnClickListener {
-                if(mDeleteListener!=null)
-                {
-                    mDeleteListener.setOnAdapterDeleteButtonClick(adapter.getItem(adapterPosition))
-                }
-            }
-
-            btnShare.setOnClickListener {
-                if(mShareListener!=null)
-                {
-                    mShareListener.setOnAdapterShareButtonClick(adapterPosition)
-                }
-            }
-
-        }
     }
 
     // ************************************************

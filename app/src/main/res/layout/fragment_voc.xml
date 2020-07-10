@@ -5,6 +5,7 @@
     android:id="@+id/fragment_voc_constraintlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".moduls.voc.fragment.VocFragment">
 
 
@@ -15,7 +16,7 @@
         app:layout_constraintBottom_toTopOf="@+id/fragment_voc_tablayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/fragment_voc_cv_toolbar" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/fragment_voc_tablayout"
@@ -29,46 +30,38 @@
         app:tabIndicatorColor="@color/colorPrimaryDark"
         app:tabIndicatorHeight="2dp"
 
-        app:tabMode="auto" />
+        app:tabMode="fixed" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/fragment_voc_cv_toolbar"
+        style="@style/VocBook_CardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="4dp"
-        app:contentPadding="4dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/fragment_voc_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/fragment_voc_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/design_default_color_background"
-                android:minHeight="?attr/actionBarSize"
-                android:theme="?attr/actionBarTheme"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:menu="@menu/menu_voc_toolbar"
-                app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
-                app:subtitle="Erstellt am 24.03.2020"
-                app:subtitleTextAppearance="@style/TextAppearance.AppCompat.Small"
-                app:subtitleTextColor="@color/text_sub"
-                app:title="Name Vokabelheft"
-                app:titleTextAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:titleTextColor="@color/text_main" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="wrap_content"
+            android:background="@color/design_default_color_background"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/menu_voc_data"
+            app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
+            app:subtitle="Erstellt am 24.03.2020"
+            app:subtitleTextAppearance="@style/TextAppearance.AppCompat.Small"
+            app:subtitleTextColor="@color/text_sub"
+            app:title="Name Vokabelheft"
+            app:titleTextAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:titleTextColor="@color/text_main" />
     </androidx.cardview.widget.CardView>
 
 

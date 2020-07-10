@@ -39,6 +39,10 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
     var settings = mainRep.getSettings(bookId)
 
 
+
+
+
+
     // Extra Data
     var vocStatusValues:MutableLiveData<ArrayList<Int>> = MutableLiveData()
 
@@ -46,6 +50,9 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
     // Lokale Live Daten:
     var liveBook:MutableLiveData<Book> = MutableLiveData()
     init {
+
+
+
         createVocStatusValues()
         uiScope.launch {
             withContext(Dispatchers.IO)
@@ -55,7 +62,11 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
             }
         }
 
+
+
     }
+
+
 
     // Genaue Daten abfragen...
     fun createVocStatusValues()

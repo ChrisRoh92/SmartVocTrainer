@@ -12,7 +12,13 @@ class VocPractiseSettingsRecyclerViewAdapter(var statusTime:Boolean = false, var
 
 
     // Data:
-    private var titles:Array<String> = arrayOf("Anzahl Vokabeln","Mit Zeit Beschränkung","Zeit Beschränkung","Übungsstatus Vokabeln","Bewertung am Ende")
+    private var titles:Array<String> = arrayOf(
+        "Anzahl Vokabeln",
+        "Mit Zeit Beschränkung",
+        "Zeit Beschränkung",
+        "Übungsstatus Vokabeln",
+        "Bewertung am Ende")
+
     private var subTitles:Array<String> = arrayOf("Wie viele Vokabeln sollen abgefragt werden?",
         "Zeitbeschränkung aktivieren",
         "Zeit für Beschränkung festlegen",

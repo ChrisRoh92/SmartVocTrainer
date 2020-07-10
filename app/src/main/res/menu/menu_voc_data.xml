@@ -12,8 +12,12 @@
         android:id="@+id/menu_voc_import"
         android:icon="@drawable/ic_file_download_black_24dp"
         android:title="Import"
-        app:showAsAction="never" />
+        app:showAsAction="never|ifRoom" />
+    <item
+        android:id="@+id/menu_voc_export"
+        android:title="Export" />
+
     <item
         android:id="@+id/menu_voc_settings"
-        android:title="Export" />
+        android:title="Einstellungen"/>
 </menu>

@@ -24,6 +24,7 @@ class DialogImportVocData():DialogFragment()
 
     // Interface:
     private lateinit var mListener: OnDialogClickListener
+    private lateinit var mContentListener:OnContentClickListener
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,9 +68,17 @@ class DialogImportVocData():DialogFragment()
         }
 
         // FrameLayout:
-        content.setOnClickListener {
+        content.setOnClickListener {mContentListener?.setOnContentClickListener()}
+    }
 
-        }
+    interface OnContentClickListener
+    {
+        fun setOnContentClickListener()
+    }
+
+    fun setOnContentClickListener(mContentListener:OnContentClickListener)
+    {
+        this.mContentListener = mContentListener
     }
 
     interface OnDialogClickListener

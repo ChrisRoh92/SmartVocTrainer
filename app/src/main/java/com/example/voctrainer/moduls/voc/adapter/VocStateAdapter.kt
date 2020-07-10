@@ -11,7 +11,7 @@ import com.example.voctrainer.moduls.voc.fragment.VocStatisticFragment
 class VocStateAdapter(var fragment: Fragment,val bookId:Long) : FragmentStateAdapter(fragment)
 {
 
-    private val fragments:ArrayList<Fragment> = arrayListOf(VocHomeFragment(),VocDatasFragment(),VocPractiseFragment(),VocStatisticFragment())
+    private val fragments:ArrayList<Fragment> = arrayListOf(VocDatasFragment(),VocPractiseFragment(),VocStatisticFragment())
 
     override fun getItemCount(): Int {
         return fragments.size

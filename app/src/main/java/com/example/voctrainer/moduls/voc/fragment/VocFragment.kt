@@ -1,6 +1,7 @@
 package com.example.voctrainer.moduls.voc.fragment
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -24,6 +25,7 @@ import com.example.voctrainer.moduls.voc.viewmodel.VocViewModelFactory
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
+
 class VocFragment : Fragment(), SearchView.OnQueryTextListener {
 
    // Allgemeine Variablen:
@@ -33,12 +35,12 @@ class VocFragment : Fragment(), SearchView.OnQueryTextListener {
     lateinit var viewPager2: ViewPager2
     private lateinit var adapter:VocStateAdapter
     private lateinit var tabLayout:TabLayout
-    private val tabText:ArrayList<String> = arrayListOf("Home","Vokabeln","Üben","Statistik")
+    private val tabText:ArrayList<String> = arrayListOf("Vokabeln","Üben","Statistik")
     private var currentPos = 0
 
     // Toolbar:
     private var toolbar: Toolbar? = null
-    private var correctMenu = false
+
 
     // NotificationChannel:
 
@@ -60,15 +62,9 @@ class VocFragment : Fragment(), SearchView.OnQueryTextListener {
 
 
         initViewPager2()
-        if(toolbar!=null)
-        initToolBar()
 
-        requireActivity().onBackPressedDispatcher.addCallback(this,object:OnBackPressedCallback(true){
-            override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.action_voc_main)
-            }
 
-        })
+
 
 
 
@@ -80,42 +76,31 @@ class VocFragment : Fragment(), SearchView.OnQueryTextListener {
 
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-
-        /*Log.e("VocFragment","bookId = $bookId")
-        Log.e("VocFragment","application = ${activity!!.application}")
-        vocViewModelFactory = VocViewModelFactory(bookId!!,activity!!.application)
-        vocViewModel = ViewModelProvider(this,vocViewModelFactory).get(VocViewModel::class.java)*/
-    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         bookId = arguments?.getLong("bookId",0L)
         vocViewModelFactory = VocViewModelFactory(bookId!!,requireActivity().application)
         vocViewModel = ViewModelProvider(this,vocViewModelFactory).get(VocViewModel::class.java)
-        startObserver()
-
-
-    }
-
-    private fun startObserver()
-    {
-        vocViewModel.book.observe(viewLifecycleOwner, Observer{book ->
-            if(toolbar==null)
+        vocViewModel.book.observe(viewLifecycleOwner, Observer {
+            if(toolbar != null)
             {
-                initToolBar()
-                toolbar!!.title = book.name
-                toolbar!!.subtitle = "Erstellt am ${book.timeStamp}"
+                toolbar?.title = it.name
             }
             else
             {
-                toolbar!!.title = book.name
-                toolbar!!.subtitle = "Erstellt am ${book.timeStamp}"
+                initToolBar()
+                toolbar?.title = it.name
             }
+
         })
+
+
+
     }
+
+
 
 
 
@@ -133,17 +118,7 @@ class VocFragment : Fragment(), SearchView.OnQueryTextListener {
 
         }.attach()
 
-        // Current Item:
-        viewPager2.setPageTransformer { page, position ->
-           if(viewPager2.currentItem != currentPos)
-           {
 
-               changeToolBarMenu(currentPos,viewPager2.currentItem)
-               currentPos = viewPager2.currentItem
-               //Toast.makeText(rootView.context,"Aktuelle Position: $currentPos",Toast.LENGTH_SHORT).show()
-
-           }
-        }
 
 
 
@@ -153,22 +128,49 @@ class VocFragment : Fragment(), SearchView.OnQueryTextListener {
     private fun initToolBar()
     {
         toolbar = rootView.findViewById(R.id.fragment_voc_toolbar)
+        // Back button Handeln:
         toolbar!!.setNavigationOnClickListener {
             findNavController().navigate(R.id.action_voc_main)
         }
 
+        // Init SearchView:
+        val searchItem = toolbar!!.menu.findItem(R.id.menu_voc_data_search)
+        val searchView = searchItem.actionView as SearchView
+        searchView.setOnSearchClickListener {
+            if(viewPager2.currentItem != 0)
+            {
+                viewPager2.setCurrentItem(0,true)
+                Log.d("VocTrainer","ViewPager2, please scroll to Position 1") }
+            }
+
+        searchView.setOnQueryTextListener(this)
 
 
-
-
-
+        // Handeln der verschiedenen Items:
         toolbar!!.setOnMenuItemClickListener {
+            // Import Click:
+
+
+
+
             if(it.itemId == R.id.menu_voc_import)
             {
-                /*var bundle = bundleOf("source" to 1)
-                findNavController().navigate(R.id.action_voc_setting,bundle)*/
+                // Start Import Work:
                 var dialog = DialogImportVocData()
                 dialog.show(childFragmentManager,"")
+                dialog.setOnContentClickListener(object:DialogImportVocData.OnContentClickListener{
+                    override fun setOnContentClickListener() {
+                        var intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                        intent.type = "*/*"
+                        intent.addCategory(Intent.CATEGORY_OPENABLE)
+                        intent.flags =
+                            Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
+                        intent.putExtra(Intent.EXTRA_LOCAL_ONLY,true)
+                        val requestCode = 155
+                        startActivityForResult(intent,requestCode)
+                    }
+
+                })
                 dialog.setOnDialogClickListener(object:DialogImportVocData.OnDialogClickListener{
                     override fun setOnDialogClickListener() {
 
@@ -177,21 +179,49 @@ class VocFragment : Fragment(), SearchView.OnQueryTextListener {
                 })
 
             }
-            else if(it.itemId == R.id.menu_voc_data_search)
-            {
-                // Suchen von Stuff
-            }
+
+            // In die Einstellungen gehen
             else if (it.itemId == R.id.menu_voc_settings)
             {
 
 
 
             }
+
+
+
+
             true
         }
 
 
     }
+
+
+
+
+    // Und hier aus import, das Ganze auch entgegen nehmen...
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == 155)
+        {
+            var uriPath = data!!.data!!
+            val bundle = Bundle()
+            bundle.putString("uri",uriPath.toString())
+            bundle.putLong("bookID",bookId!!)
+            findNavController().navigate(R.id.action_voc_csvimport, bundle)
+
+        }
+
+
+    }
+
+
+
+
+
+
 
     private fun changeToolBarMenu(oldPos:Int,newPos:Int)
     {
@@ -216,13 +246,13 @@ class VocFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
-        vocViewModel.onFilterVocs(query!!)
-        Log.d("VocTrainer","VocFragment - onQueryTextSubmit query = ${query!!}")
+        /*vocViewModel.onFilterVocs(query!!)
+        Log.d("VocTrainer","VocFragment - onQueryTextSubmit query = ${query!!}")*/
         return true
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        if(TextUtils.isEmpty(newText))
+        /*if(TextUtils.isEmpty(newText))
         {
             vocViewModel.onFilterVocs("")
         }
@@ -230,7 +260,7 @@ class VocFragment : Fragment(), SearchView.OnQueryTextListener {
         {
             Log.d("VocTrainer","VocFragment - onQueryTextChange query = ${newText!!}")
             vocViewModel.onFilterVocs(newText!!)
-        }
+        }*/
         return true
     }
 

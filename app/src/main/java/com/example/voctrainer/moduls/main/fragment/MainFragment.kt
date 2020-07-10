@@ -1,12 +1,14 @@
 package com.example.voctrainer.moduls.main.fragment
 
 import android.content.Intent
+import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.LAYER_TYPE_HARDWARE
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
@@ -17,19 +19,21 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 
 import com.example.voctrainer.R
 import com.example.voctrainer.backend.database.entities.Book
+import com.example.voctrainer.moduls.main.adapter.MainRecyclerViewAdapter
 import com.example.voctrainer.moduls.main.adapter.MainRecyclerViewListAdapter
 import com.example.voctrainer.moduls.main.dialogs.DialogImportVoc
 import com.example.voctrainer.moduls.main.dialogs.DialogNewVoc
 import com.example.voctrainer.moduls.main.viewmodel.MainViewModel
 import com.example.voctrainer.moduls.standard.dialogs.DialogStandardAlert
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-
-
+import kotlin.random.Random
 
 
 /*
@@ -50,7 +54,7 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
     // RecyclerView-Stuff:
     private lateinit var rv:RecyclerView
     private lateinit var layoutManager: LinearLayoutManager
-    private lateinit var adapter:MainRecyclerViewListAdapter
+    private lateinit var adapter:MainRecyclerViewAdapter
 
     // NavController
     private lateinit var navController: NavController
@@ -62,7 +66,8 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
     private lateinit var fabAddVoc:FloatingActionButton
 
     // Status
-    private var deleteBtnWasPushed = false
+    private var adapterAction = 0
+    private var deletePosition = 0
 
 
 
@@ -72,24 +77,20 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        rootView =  inflater.inflate(R.layout.fragment_main, container, false)
+        rootView =  inflater.inflate(R.layout.fragment_main_2, container, false)
         initRecyclerView()
 
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.books.observe(viewLifecycleOwner, Observer { books ->
-            Log.d("VocTrainer","MainFragment Book List = $books")
-            adapter.submitList(books)
-            adapter.submitList(books) {
-                /*layoutManager.smoothScrollToPosition(rv,null,0)*/
-                if(!deleteBtnWasPushed)
-                {
-                    rv.scrollToPosition(0)
-                }
-                else
-                {
-                    deleteBtnWasPushed = false
-                }
+            //adapter.submitList(books)
+            adapter.updateContent(ArrayList(books),deletePosition,adapterAction)
+            if (adapterAction == 2)
+            {
+                //rv.smoothScrollToPosition(0)
 
+                rv.post {
+
+                    rv.smoothScrollToPosition(0) }
             }
 
 
@@ -97,9 +98,7 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
 
 
         navController = findNavController()
-
         initToolBar()
-
         initFab()
 
 
@@ -116,20 +115,53 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
     {
         rv = rootView.findViewById(R.id.main_rv)
         layoutManager = LinearLayoutManager(rootView.context, RecyclerView.VERTICAL,false)
-        adapter = MainRecyclerViewListAdapter()
+        adapter = MainRecyclerViewAdapter(ArrayList())
         rv.layoutManager = layoutManager
         rv.adapter = adapter
         rv.setHasFixedSize(true)
 
+        //rv.addItemDecoration(DividerItemDecoration(rv.context,layoutManager.orientation))
 
-        initAdapterListener()
+        //initAdapterListener()
+
+        // Vokabelheft öffnen
+        adapter.setOnAdapterShowButtonClick(object:MainRecyclerViewAdapter.OnAdapterShowButtonClick{
+            override fun setOnAdapterShowButtonClick(bookId: Long) {
+                var bundle = Bundle()
+                //Log.d("VocLearner","MainFragment - initAdapterister - adapter.setOnAdapterShowButtonClick: bookdId = $bookId")
+                bundle.putLong("bookId",bookId)
+                navController.navigate(R.id.action_main_voc,bundle)
+            }
+
+
+        })
+
+        // Vokabelheft löschen
+        adapter.setOnAdapterDeleteClick(object:MainRecyclerViewAdapter.OnAdapterDeleteButtonClick{
+            override fun setOnAdapterDeleteButtonClick(book: Book,position: Int) {
+                // Vokabelheft wird endgültig gelöscht
+                // Vorgang kann nicht rückgängig gemacht werden
+                var dialog = DialogStandardAlert("Vokabelheft wird endgültig gelöscht!","Vorgang kann nicht rückgängig gemacht werden")
+                dialog.show(childFragmentManager,"")
+                dialog.setOnDialogClickListener(object:DialogStandardAlert.OnDialogClickListener{
+                    override fun setOnDialogClickListener() {
+                        viewModel.onDeleteBook(book)
+                        adapterAction = 1
+                        deletePosition = position
+                    }
+
+                })
+
+            }
+
+        })
 
 
 
 
     }
 
-    private fun initAdapterListener()
+    /*private fun initAdapterListener()
     {
         // Vokabelheft öffnen
         adapter.setOnAdapterShowButtonClick(object:MainRecyclerViewListAdapter.OnAdapterShowButtonClick{
@@ -179,17 +211,16 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
             }
 
         })
-    }
+    }*/
 
 
 
     private fun initToolBar()
     {
         toolbar = rootView.findViewById(R.id.fragment_main_toolbar)
+        toolbar.title = "Vokabelhefte"
         toolbar.inflateMenu(R.menu.menu_main_toolbar)
         toolbar.setNavigationOnClickListener {
-//            var bundle = bundleOf("source" to 0)
-//            navController.navigate(R.id.action_,bundle)
             navController.navigate(R.id.action_main_settings)
         }
 
@@ -232,35 +263,34 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
 
             if(data?.type == "text/comma-separated-values")
             {
-                var uriPath = data.data!!.path
+                var uriPath = data.data!!
 
-                val bundle = Bundle()
-                bundle.putString("uri",data.data.toString())
-                navController.navigate(R.id.action_global_csv_import, bundle)
+                /*val bundle = Bundle()
+                bundle.putString("uri",uriPath.toString())
+                navController.navigate(R.id.action_global_csv_import, bundle)*/
 
             }
 
 
     }
 
-
-
     private fun initFab()
     {
         fabAddVoc = rootView.findViewById(R.id.main_fab)
         fabAddVoc.setOnClickListener {
+
             var dialog = DialogNewVoc()
             dialog.show(childFragmentManager,"")
             dialog.setOnDialogClickListener(object:DialogNewVoc.OnDialogClickListener{
                 override fun setOnDialogClickListener(name: String) {
                     viewModel.onAddBook(name)
+                    adapterAction = 2
 
                 }
 
             })
         }
     }
-
 
     // From SearchVIew
     override fun onQueryTextSubmit(query: String?): Boolean {

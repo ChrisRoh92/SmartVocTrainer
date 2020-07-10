@@ -12,14 +12,13 @@
         tools:layout="@layout/fragment_main" >
         <action
             android:id="@+id/action_main_voc"
-            app:destination="@id/vocFragment"
-            app:enterAnim="@anim/pop_in"
-            app:exitAnim="@anim/pop_out" />
+            app:destination="@id/vocFragment" />
         <action
             android:id="@+id/action_main_settings"
-            app:destination="@id/settingsFragment"
-            app:enterAnim="@anim/slide_in"
-            app:exitAnim="@anim/slide_out" />
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_test_csv"
+            app:destination="@id/CSVImportFragment" />
     </fragment>
     <fragment
         android:id="@+id/vocFragment"
@@ -29,14 +28,15 @@
         <action
             android:id="@+id/action_voc_main"
             app:destination="@id/mainFragment"
-            app:enterAnim="@anim/pop_in"
-            app:exitAnim="@anim/pop_out"
             app:popUpTo="@id/mainFragment"
             app:popUpToInclusive="true" />
         <argument
             android:name="bookId"
             app:argType="long"
             android:defaultValue="0L" />
+        <action
+            android:id="@+id/action_voc_csvimport"
+            app:destination="@id/CSVImportFragment" />
     </fragment>
     <navigation
         android:id="@+id/nested_practise"
@@ -92,8 +92,6 @@
         <action
             android:id="@+id/action_intro_main"
             app:destination="@id/mainFragment"
-            app:enterAnim="@anim/pop_in"
-            app:exitAnim="@anim/pop_out"
             app:popUpTo="@id/introFragment"
             app:popUpToInclusive="true" />
     </fragment>
@@ -112,8 +110,6 @@
         <action
             android:id="@+id/action_splash_main"
             app:destination="@id/mainFragment"
-            app:enterAnim="@anim/slide_in"
-            app:exitAnim="@anim/slide_out"
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
     </fragment>
@@ -126,15 +122,16 @@
             android:name="uri"
             app:argType="string"
             app:nullable="true" />
+        <argument
+            android:name="bookId"
+            app:argType="long"
+            android:defaultValue="0L" />
         <action
-            android:id="@+id/action_csvimport_main"
-            app:destination="@id/mainFragment" />
+            android:id="@+id/action_csvimport_vocfragment"
+            app:destination="@id/vocFragment"
+            app:popUpTo="@id/vocFragment"
+            app:popUpToInclusive="true" />
     </fragment>
-    <action
-        android:id="@+id/action_global_csv_import"
-        app:destination="@id/CSVImportFragment"
-        app:popUpTo="@id/mainFragment"
-        app:popUpToInclusive="true" />
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.voctrainer.moduls.settings.fragments.FragmentSettings"
@@ -143,10 +140,6 @@
         <action
             android:id="@+id/action_settings_main"
             app:destination="@id/mainFragment"
-            app:enterAnim="@anim/pop_in"
-            app:exitAnim="@anim/pop_out"
-            app:popEnterAnim="@anim/pop_in"
-            app:popExitAnim="@anim/pop_out"
             app:popUpTo="@id/mainFragment"
             app:popUpToInclusive="true" />
     </fragment>

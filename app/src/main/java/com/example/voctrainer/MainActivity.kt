@@ -3,6 +3,7 @@ package com.example.voctrainer
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentManager
@@ -33,12 +34,16 @@ class MainActivity : AppCompatActivity() {
         // umgeleitet werden...
         if(intent?.action == Intent.ACTION_VIEW)
         {
-            if(intent?.type == "text/comma-separated-values")
-            {
-                var uriPath = intent.data!!.path
+            Log.d("VocTrainer","MainActivity - Intent wurde erkannt")
 
-                val bundle = bundleOf("uri" to uriPath)
-                navController.navigate(R.id.action_global_csv_import, bundle)
+            if(true)
+            {
+                Log.d("VocTrainer","MainActivity - Intent-Type passt auch")
+                var uriPath = intent.data!!.toString()
+                Log.d("VocTrainer","MainActivity - uriPath = $uriPath")
+                var bundle = bundleOf("uri" to uriPath)
+                bundle.putLong("BookId",1)
+                navController.navigate(R.id.CSVImportFragment, bundle)
 
             }
         }

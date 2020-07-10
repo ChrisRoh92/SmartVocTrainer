@@ -5,7 +5,6 @@
     android:id="@+id/fragment_voc_settings_constraintlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
     tools:context=".moduls.voc.fragment.VocFragment">
 
 

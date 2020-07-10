@@ -68,7 +68,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="4dp"
-                android:text="Neuer Import"
+                android:text="@android:string/ok"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/divider44" />
@@ -86,7 +86,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView22" />
 
             <TextView
-                android:id="@+id/textView35"
+                android:id="@+id/dialog_csvimport_tv_msg1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -106,17 +106,29 @@
                 android:background="?android:attr/listDivider"
                 app:layout_constraintEnd_toEndOf="@+id/divider43"
                 app:layout_constraintStart_toStartOf="@+id/divider43"
-                app:layout_constraintTop_toBottomOf="@+id/textView35" />
+                app:layout_constraintTop_toBottomOf="@+id/dialog_csvimport_tv_msg2" />
 
             <Button
                 android:id="@+id/dialog_csvimport_error_btn_abort"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="Abbruch"
+                android:text="Import abbrechen"
                 app:layout_constraintBottom_toBottomOf="@+id/dialog_csvimport_error_btn_new"
                 app:layout_constraintEnd_toStartOf="@+id/dialog_csvimport_error_btn_new"
                 app:layout_constraintTop_toTopOf="@+id/dialog_csvimport_error_btn_new" />
+
+            <TextView
+                android:id="@+id/dialog_csvimport_tv_msg2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="TextView"
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="@+id/dialog_csvimport_tv_msg1"
+                app:layout_constraintStart_toStartOf="@+id/dialog_csvimport_tv_msg1"
+                app:layout_constraintTop_toBottomOf="@+id/dialog_csvimport_tv_msg1" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

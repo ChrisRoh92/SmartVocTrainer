@@ -5,10 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import com.example.voctrainer.R
 
-class DialogImportError(): DialogFragment()
+class DialogImportError(var msg1:String, var msg2:String): DialogFragment()
 {
     // Allgemeine Variablen:
     private lateinit var dialogView: View
@@ -16,6 +17,10 @@ class DialogImportError(): DialogFragment()
     // View Elemente:
     private lateinit var btnNewImport:Button
     private lateinit var btnAbort:Button
+
+    // TextView:
+    private lateinit var tvMsg1:TextView
+    private lateinit var tvMsg2:TextView
 
 
     // Interface:
@@ -43,6 +48,15 @@ class DialogImportError(): DialogFragment()
 
     private fun initViewElements()
     {
+
+        // TextViews:
+        tvMsg1 = dialogView.findViewById(R.id.dialog_csvimport_tv_msg1)
+        tvMsg2 = dialogView.findViewById(R.id.dialog_csvimport_tv_msg2)
+
+        tvMsg1.text = msg1
+        tvMsg2.text = msg2
+
+
         btnNewImport = dialogView.findViewById(R.id.dialog_csvimport_error_btn_new)
         btnAbort = dialogView.findViewById(R.id.dialog_csvimport_error_btn_abort)
 
@@ -60,6 +74,8 @@ class DialogImportError(): DialogFragment()
                 mDismissListener.setOnDismissDialogClickListener()
             }
         }
+
+
     }
 
 

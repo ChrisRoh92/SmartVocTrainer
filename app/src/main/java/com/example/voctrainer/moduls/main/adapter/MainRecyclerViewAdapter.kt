@@ -21,9 +21,8 @@ class MainRecyclerViewAdapter(var content:ArrayList<Book>):
 
     // Interface:
     private lateinit var mShowListener:OnAdapterShowButtonClick
-    private lateinit var mPractiseListener:OnAdapterPractiseButtonClick
     private lateinit var mDeleteListener:OnAdapterDeleteButtonClick
-    private lateinit var mShareListener:OnAdapterShareButtonClick
+
 
 
 
@@ -32,7 +31,7 @@ class MainRecyclerViewAdapter(var content:ArrayList<Book>):
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_main_voc,parent,false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_main_2,parent,false)
         return ViewHolder(view)
     }
 
@@ -40,14 +39,13 @@ class MainRecyclerViewAdapter(var content:ArrayList<Book>):
         return content.size
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int)
-    {
-        val book = content[holder.adapterPosition]
-        val progress = getProgress(book.vocCount,book.vocLearned)
-        Log.e("VocTrainer","MainRecyclerViewAdapter.kt onBindViewHolder progress = $progress")
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val book = content[position]
+        val progress = book.vocLearned
+
 
         holder.tvTitle.text = book.name
-        holder.tvSubTitle.text = book.timeStamp
+        holder.tvSubTitle.text = "Erstellt am: ${book.timeStamp}"
 
         // Progress:
         holder.tvProgress.text = "$progress %"
@@ -55,66 +53,44 @@ class MainRecyclerViewAdapter(var content:ArrayList<Book>):
         holder.tvVocs.text = "${book.vocCount}"
         holder.tvVocsOpen.text = "${book.vocUnLearned}"
         holder.tvVocsLearned.text = "${book.vocLearned}"
-        holder.pbProgress.progress = progress
 
-
-        holder.btnShow.setOnClickListener {
-            if(mShowListener!=null)
-            {
-                mShowListener.setOnAdapterShowButtonClick(book.id)
-            }
-        }
-
-        holder.btnPractise.setOnClickListener {
-            if(mPractiseListener!=null)
-            {
-                mPractiseListener.setOnAdapterPractiseButtonClick(holder.adapterPosition)
-            }
-        }
-
-        holder.btnDelete.setOnClickListener {
-            if(mDeleteListener!=null)
-            {
-                mDeleteListener.setOnAdapterDeleteButtonClick(book)
-            }
-        }
-
-        holder.btnShare.setOnClickListener {
-            if(mShareListener!=null)
-            {
-                mShareListener.setOnAdapterShareButtonClick(holder.adapterPosition)
-            }
+        holder.itemView.setOnClickListener { mShowListener?.setOnAdapterShowButtonClick(content[holder.adapterPosition].id) }
+        holder.itemView.setOnLongClickListener {
+            mDeleteListener?.setOnAdapterDeleteButtonClick(content[holder.adapterPosition],holder.adapterPosition)
+            true
         }
     }
 
-    fun updateContent(newContent:ArrayList<Book>)
+
+
+    fun updateContent(newContent:ArrayList<Book>,position: Int,action:Int)
     {
-        val diffResult = DiffUtil.calculateDiff(MyDiffCallback(content,newContent))
-        diffResult.dispatchUpdatesTo(this)
-        /*content = newContent
-        notifyDataSetChanged()*/
-
+//        val diffResult = DiffUtil.calculateDiff(MyDiffCallback(content,newContent))
+//        diffResult.dispatchUpdatesTo(this)
+        content = newContent
+        if(action == 0)
+        {
+            notifyDataSetChanged()
+        }
+        else if(action == 1)
+        {
+            notifyItemRemoved(position)
+        }
+        else if (action == 2)
+        {
+            notifyItemInserted(0)
+        }
 
     }
 
-    fun getProgress(vocCount:Int,vocLearned:Int):Int
-    {
-        return if(vocCount == 0)
-        {
-            0
-        }
-        else
-        {
-            ((vocLearned.toFloat()/vocCount)*100).roundToInt()
-        }
-    }
+
 
 
 
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     {
-        // Alle Buttons
+        /*// Alle Buttons
         var btnShow: Button = itemView.findViewById(R.id.item_voc_btn_show)
         var btnPractise:Button = itemView.findViewById(R.id.item_voc_btn_practise)
         var btnDelete:Button = itemView.findViewById(R.id.item_voc_btn_delete)
@@ -131,8 +107,16 @@ class MainRecyclerViewAdapter(var content:ArrayList<Book>):
 
         init {
             pbProgress.max = 100
+*/
 
-        }
+        // Alle Buttons
+        // TextViews:
+        var tvTitle: TextView = itemView.findViewById(R.id.item_tv_title)
+        var tvSubTitle: TextView = itemView.findViewById(R.id.item_tv_subtitle)
+        var tvProgress: TextView = itemView.findViewById(R.id.item_tv_progress)
+        var tvVocsOpen: TextView = itemView.findViewById(R.id.item_tv_vocs_nlearned)
+        var tvVocs: TextView = itemView.findViewById(R.id.item_tv_vocs)
+        var tvVocsLearned: TextView = itemView.findViewById(R.id.item_tv_vocs_learned)
 
 
     }
@@ -148,36 +132,18 @@ class MainRecyclerViewAdapter(var content:ArrayList<Book>):
         this.mShowListener = mShowListener
     }
 
-    // Interface 2 - Schnelle Übung
-    interface OnAdapterPractiseButtonClick
-    {
-        fun setOnAdapterPractiseButtonClick(pos:Int)
-    }
-
-    fun setOnAdapterPractiseButtonClick(mPractiseListener:OnAdapterPractiseButtonClick)
-    {
-        this.mPractiseListener = mPractiseListener
-    }
-
-    // Interface 3 - Delete
+    // Interface 2 - Delete
     interface OnAdapterDeleteButtonClick
     {
-        fun setOnAdapterDeleteButtonClick(book:Book)
+        fun setOnAdapterDeleteButtonClick(book:Book,position: Int)
     }
 
-    fun setOnAdapterDeleteButtonClick(mDeleteListener:OnAdapterDeleteButtonClick)
+    fun setOnAdapterDeleteClick(mDeleteListener: OnAdapterDeleteButtonClick)
     {
         this.mDeleteListener = mDeleteListener
     }
 
-    // Interface 4 - Share
-    interface OnAdapterShareButtonClick
-    {
-        fun setOnAdapterShareButtonClick(pos:Int)
-    }
 
-    fun setOnAdapterShareButtonClick(mShareListener:OnAdapterShareButtonClick)
-    {
-        this.mShareListener = mShareListener
-    }
+
+
 }

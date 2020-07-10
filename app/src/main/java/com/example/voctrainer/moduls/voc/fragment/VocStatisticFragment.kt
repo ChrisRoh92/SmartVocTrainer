@@ -68,7 +68,7 @@ class VocStatisticFragment(): Fragment()
         super.onActivityCreated(savedInstanceState)
         bookId = arguments?.getLong("bookId",0)
         try {
-            vocViewModelFactory = VocViewModelFactory(bookId!!,activity!!.application)
+            vocViewModelFactory = VocViewModelFactory(bookId!!,requireActivity().application)
             vocViewModel = ViewModelProvider(requireParentFragment(),vocViewModelFactory).get(
                 VocViewModel::class.java)
             startObserver()
