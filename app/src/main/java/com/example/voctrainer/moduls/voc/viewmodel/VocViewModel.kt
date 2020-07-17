@@ -10,13 +10,14 @@ import com.example.voctrainer.backend.database.entities.Setting
 import com.example.voctrainer.backend.database.entities.Test
 import com.example.voctrainer.backend.database.entities.Voc
 import com.example.voctrainer.backend.repository.MainRepository
+import com.example.voctrainer.checkForLearnStatus
 import com.example.voctrainer.createCurrentTimeStamp
 import com.example.voctrainer.moduls.voc.utils.TestResults
 import com.example.voctrainer.moduls.voc.utils.TestStatistic
 import kotlinx.coroutines.*
 import kotlin.random.Random
 
-class VocViewModel(private val bookId:Long,application: Application) : AndroidViewModel(application)
+class VocViewModel(val bookId:Long,application: Application) : AndroidViewModel(application)
 {
     // Repository
     private val mainRep = MainRepository(context = application.applicationContext)
@@ -36,7 +37,8 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
     var lastTwoTest = mainRep.getLastTest(bookId)
 
     // Settings
-    var settings = mainRep.getSettings(bookId)
+    private var settings:LiveData<List<Setting>>? = mainRep.getSettings(bookId)
+
 
 
 
@@ -52,20 +54,18 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
     init {
 
 
-
-        createVocStatusValues()
         uiScope.launch {
             withContext(Dispatchers.IO)
             {
                 liveBook.postValue(mainRep.getOfflineBookById(bookId))
                 vocs.postValue(mainRep.getOfflineVocs(bookId))
+                //settings =
+                createVocStatusValues()
             }
+
+
         }
-
-
-
     }
-
 
 
     // Genaue Daten abfragen...
@@ -74,6 +74,10 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
         uiScope.launch {
             withContext(Dispatchers.IO)
             {
+                Log.d("VocTrainer","Folgende Werte gelten für die drei Kategorien:")
+                Log.d("VocTrainer","Ungeübt: status = 0")
+                Log.d("VocTrainer","in Übung: status >0 && status < 5")
+                Log.d("VocTrainer","Geübt: status >=5")
                 var values = arrayListOf(0,0,0)
                 if(vocs.value == null)
                 {
@@ -81,20 +85,35 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
 
                     for (i in localVoc)
                     {
-                        values[i.status]++
+                        values[checkForLearnStatus(i.status)]++
+
                     }
                 }
                 else
                 {
                     for (i in vocs.value!!)
                     {
-                        values[i.status]++
+
+                        values[checkForLearnStatus(i.status)]++
                     }
                 }
 
                 vocStatusValues.postValue(values)
             }
         }
+    }
+
+    fun createDefaultSettings()
+    {
+        uiScope.launch {
+            withContext(Dispatchers.IO)
+            {
+                val settings = Setting(0L,bookId,10,false,0,false,0)
+                mainRep.insertNewSettings(settings)
+            }
+        }
+
+
     }
 
 
@@ -110,8 +129,8 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
     {
         uiScope.launch {
 
-            val result = Random.nextInt(0,3)
-            mainRep.insertNewVoc(Voc(0L,bookId,vocNative,vocForeign,result ,"-"))
+
+            mainRep.insertNewVoc(Voc(0L,bookId,vocNative,vocForeign,0 ,"-"))
             mainRep.updateBookWithNewData(bookId)
             createVocStatusValues()
             withContext(Dispatchers.IO)
@@ -177,10 +196,10 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
     }
 
     // VocPractise:
-    fun onAddNewSetting(itemCount:Int,timeMode:Boolean,time:Long,practiseMode:Boolean,settingsMode:Int)
+    fun onAddNewSetting(setting: Setting)
     {
         uiScope.launch {
-            mainRep.insertNewSettings(Setting(0,bookId,itemCount,timeMode,time,practiseMode,settingsMode))
+            mainRep.insertNewSettings(setting)
         }
     }
     fun onUpdateSetting(newSetting:Setting)
@@ -208,6 +227,16 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
     {
         uiScope.launch {
             mainRep.deleteTest(test)
+        }
+    }
+
+    fun deleteTestAtPosition(pos:Int)
+    {
+        uiScope.launch {
+            withContext(Dispatchers.IO)
+            {
+                mainRep.deleteTest(tests!!.value!![pos])
+            }
         }
     }
 
@@ -330,6 +359,13 @@ class VocViewModel(private val bookId:Long,application: Application) : AndroidVi
     {
         return vocs
     }
+
+    fun getBookID():Long = bookId
+
+    // Get the LiveData List with the Settings of the current Book
+    fun getSettings():LiveData<List<Setting>>? = settings
+
+
 
 
 

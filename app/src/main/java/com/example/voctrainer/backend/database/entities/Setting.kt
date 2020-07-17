@@ -13,13 +13,13 @@ import androidx.room.Relation
 // settingsMode = 0: Nur ungeübte, 1: Ungeübte und gelernte
 
 @Entity
-data class Setting(@PrimaryKey(autoGenerate = true) val id:Long,
-                   val bookId:Long,
-                   val itemCount:Int,
-                   val timeMode:Boolean = false,
-                   val time:Long = 0L,
-                   val practiseMod:Boolean = false,
-                   val settingsMode:Int = 0)
+data class Setting(@PrimaryKey(autoGenerate = true) var id:Long,
+                   var bookId:Long,
+                   var itemCount:Int,
+                   var timeMode:Boolean = false,
+                   var time:Long = 0L,
+                   var practiseMod:Boolean = false,
+                   var settingsMode:Int = 0)
 
 
 /*

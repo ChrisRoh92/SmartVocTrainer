@@ -20,7 +20,7 @@ class DialogNewVocData: DialogFragment(), View.OnClickListener {
 
     // Allgemeine Variablen:
     private lateinit var dialogView: View
-    private var dialogFragment = this
+
 
     // View Elemente:
     // Buttons:

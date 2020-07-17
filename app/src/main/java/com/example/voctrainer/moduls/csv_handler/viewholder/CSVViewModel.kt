@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.voctrainer.backend.database.entities.Book
 import com.example.voctrainer.backend.database.entities.Voc
 import com.example.voctrainer.backend.repository.MainRepository
 import com.example.voctrainer.moduls.csv_handler.CSVImportProcessor.createLocalVocsFromStrings
@@ -25,11 +26,23 @@ class CSVViewModel(application: Application) : AndroidViewModel(application)
     private var bookId:Long = -1
     private val mainRep = MainRepository(context = application.applicationContext)
 
+    // Get the Books:
+    private var allBooks:MutableLiveData<List<Book>> = MutableLiveData()
+
     // Daten für abgerufene Daten aus CSV
     private var rawData:ArrayList<String> = ArrayList()
     private var content: MutableLiveData<ArrayList<LocalVoc>> = MutableLiveData()
 
     private var importComplete:MutableLiveData<Boolean> = MutableLiveData()
+
+    init {
+        uiScope.launch {
+            withContext(Dispatchers.IO)
+            {
+                allBooks.postValue(mainRep.getOfflineBooks())
+            }
+        }
+    }
 
     fun setBookID(id:Long)
     {
@@ -110,6 +123,8 @@ class CSVViewModel(application: Application) : AndroidViewModel(application)
     {
         return importComplete
     }
+
+    fun getBooks():LiveData<List<Book>> = allBooks
 
 
 }

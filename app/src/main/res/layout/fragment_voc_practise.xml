@@ -102,6 +102,19 @@
                         app:layout_constraintEnd_toStartOf="@+id/fragment_voc_practise_btn_save"
                         app:layout_constraintTop_toTopOf="@+id/fragment_voc_practise_btn_save" />
 
+                    <ImageButton
+                        android:id="@+id/fragment_voc_practise_btn_settings"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="4dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:scaleType="center"
+                        app:layout_constraintBottom_toBottomOf="@+id/textView8"
+                        app:layout_constraintDimensionRatio="1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/textView"
+                        app:srcCompat="@drawable/ic_settings_black_24dp" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
@@ -117,19 +130,19 @@
                     android:layout_height="match_parent">
 
                     <ImageButton
-                        android:id="@+id/imageButton4"
+                        android:id="@+id/fragment_voc_practise_btn_filter"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:layout_marginEnd="8dp"
                         android:background="?attr/selectableItemBackground"
                         app:layout_constraintBottom_toBottomOf="@+id/textView17"
                         app:layout_constraintDimensionRatio="1"
-                        app:layout_constraintEnd_toStartOf="@+id/imageButton"
+                        app:layout_constraintEnd_toStartOf="@+id/fragment_voc_practise_btn_sort"
                         app:layout_constraintTop_toTopOf="@+id/textView10"
                         app:srcCompat="@drawable/ic_filter_list_black_24dp" />
 
                     <ImageButton
-                        android:id="@+id/imageButton"
+                        android:id="@+id/fragment_voc_practise_btn_sort"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:layout_marginEnd="4dp"
@@ -137,7 +150,7 @@
                         app:layout_constraintBottom_toBottomOf="@+id/textView17"
                         app:layout_constraintDimensionRatio="1"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/imageButton4"
+                        app:layout_constraintTop_toTopOf="@+id/fragment_voc_practise_btn_filter"
                         app:srcCompat="@drawable/ic_sort_black_24dp" />
 
                     <TextView
@@ -160,7 +173,7 @@
                         android:text="Alle Übungen mit Ergebnissen"
                         android:textColor="@color/text_sub"
                         android:textSize="12sp"
-                        app:layout_constraintEnd_toStartOf="@+id/imageButton4"
+                        app:layout_constraintEnd_toStartOf="@+id/fragment_voc_practise_btn_filter"
                         app:layout_constraintStart_toStartOf="@+id/textView10"
                         app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
@@ -206,7 +219,7 @@
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/colorAccent"
         android:clickable="true"
-        android:src="@drawable/ic_add_white_24dp"
+        android:src="@drawable/ic_play_arrow_black_24dp"
         app:backgroundTint="@color/colorAccent" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

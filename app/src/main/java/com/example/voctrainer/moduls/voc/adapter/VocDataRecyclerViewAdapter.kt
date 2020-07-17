@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.voctrainer.R
 import com.example.voctrainer.backend.database.entities.Voc
+import com.example.voctrainer.checkForLearnStatus
 import com.example.voctrainer.moduls.voc.utils.VocDataDiffUtil
 
 class VocDataRecyclerViewAdapter(var content:ArrayList<Voc>):
@@ -36,7 +37,8 @@ class VocDataRecyclerViewAdapter(var content:ArrayList<Voc>):
         holder.tvTitle.text = voc.native2
         holder.tvSubtitle.text = voc.foreign
         holder.tvDate.text = voc.lastPractiseDate
-        holder.image.setImageResource(imageList[voc.status])
+        setImageResource(holder.image,voc.status)
+
 
 
     }
@@ -57,6 +59,12 @@ class VocDataRecyclerViewAdapter(var content:ArrayList<Voc>):
             content = newContent
             notifyDataSetChanged()
         }
+    }
+
+    private fun setImageResource(imageView: ImageView,status:Int)
+    {
+        imageView.setImageResource(imageList[checkForLearnStatus(status)])
+
     }
 
 

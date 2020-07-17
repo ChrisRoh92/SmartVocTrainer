@@ -61,10 +61,11 @@
 
             <TextView
                 android:id="@+id/dialog_standard_alert_tv_main"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:text="Vokabelheft wird endgültig gelöscht"
+                android:textAlignment="center"
                 android:textColor="@color/text_main"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -73,9 +74,10 @@
 
             <TextView
                 android:id="@+id/dialog_standard_alert_tv_sub"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Vorgang kann nicht rückgängig gemacht werden"
+                android:textAlignment="center"
                 android:textColor="@color/text_sub"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"

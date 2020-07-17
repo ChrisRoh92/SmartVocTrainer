@@ -36,7 +36,7 @@ class VocFragment : Fragment(), SearchView.OnQueryTextListener {
     private lateinit var adapter:VocStateAdapter
     private lateinit var tabLayout:TabLayout
     private val tabText:ArrayList<String> = arrayListOf("Vokabeln","Üben","Statistik")
-    private var currentPos = 0
+    private var currentPos = -1
 
     // Toolbar:
     private var toolbar: Toolbar? = null
@@ -81,6 +81,11 @@ class VocFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         bookId = arguments?.getLong("bookId",0L)
+        currentPos = requireArguments().getInt("posViewPager",-1)
+        if(currentPos != -1 && currentPos >= 0 && currentPos <3)
+        {
+            viewPager2.setCurrentItem(currentPos,false)
+        }
         vocViewModelFactory = VocViewModelFactory(bookId!!,requireActivity().application)
         vocViewModel = ViewModelProvider(this,vocViewModelFactory).get(VocViewModel::class.java)
         vocViewModel.book.observe(viewLifecycleOwner, Observer {
@@ -110,6 +115,7 @@ class VocFragment : Fragment(), SearchView.OnQueryTextListener {
         viewPager2 = rootView.findViewById(R.id.fragment_vocs_viewpager2)
         adapter = VocStateAdapter(this,bookId!!)
         viewPager2.adapter = adapter
+        viewPager2.offscreenPageLimit = 2
 
         // TabLayout Stuff:
         tabLayout = rootView.findViewById(R.id.fragment_voc_tablayout)

@@ -71,7 +71,11 @@ class MainActivity : AppCompatActivity() {
             }
             back_pressed = System.currentTimeMillis()
         }
-        else if(navController.currentDestination!!.id == R.id.practiseFragment && !practiseBack)
+        else
+        {
+            super.onBackPressed()
+        }
+        /*else if(navController.currentDestination!!.id == R.id.practiseFragment && !practiseBack)
         {
             var dialog = DialogStandardAlert("Möchten Sie den Versuch wirklich abbrechen?","Dieser Vorgang kann nicht rückgängig gemacht werden")
             dialog.show(supportFragmentManager,"")
@@ -88,7 +92,7 @@ class MainActivity : AppCompatActivity() {
             practiseBack = false
             super.onBackPressed()
 
-        }
+        }*/
 
     }
 
@@ -105,3 +109,4 @@ class MainActivity : AppCompatActivity() {
 
 
 }
+  

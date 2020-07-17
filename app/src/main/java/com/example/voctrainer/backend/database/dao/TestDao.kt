@@ -9,7 +9,7 @@ interface TestDao
 {
 
     @Insert
-    fun insert(test:Test)
+    suspend fun insert(test:Test)
 
     @Insert
     fun insertAll(tests:List<Test>)

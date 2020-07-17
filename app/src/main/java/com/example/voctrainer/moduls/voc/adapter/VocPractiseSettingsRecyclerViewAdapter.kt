@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.voctrainer.R
 
-class VocPractiseSettingsRecyclerViewAdapter(var statusTime:Boolean = false, var statusBewertung:Boolean = false):RecyclerView.Adapter<VocPractiseSettingsRecyclerViewAdapter.ViewHolder>() {
+class VocPractiseSettingsRecyclerViewAdapter(var statusTime:Boolean, var statusBewertung:Boolean):RecyclerView.Adapter<VocPractiseSettingsRecyclerViewAdapter.ViewHolder>() {
 
 
     // Data:
@@ -19,7 +19,7 @@ class VocPractiseSettingsRecyclerViewAdapter(var statusTime:Boolean = false, var
         "Übungsstatus Vokabeln",
         "Bewertung am Ende")
 
-    private var subTitles:Array<String> = arrayOf("Wie viele Vokabeln sollen abgefragt werden?",
+    private var subTitles:ArrayList<String> = arrayListOf("Wie viele Vokabeln sollen abgefragt werden?",
         "Zeitbeschränkung aktivieren",
         "Zeit für Beschränkung festlegen",
         "Welche Vokabeln möchtest du üben?",
@@ -27,6 +27,14 @@ class VocPractiseSettingsRecyclerViewAdapter(var statusTime:Boolean = false, var
 
     // Interface:
     private lateinit var mListener:OnItemClickListener
+
+    fun updateSubs(subTitles:ArrayList<String>,statusTime:Boolean,statusBewertung:Boolean)
+    {
+        this.subTitles = subTitles
+        this.statusTime = statusTime
+        this.statusBewertung = statusBewertung
+        notifyDataSetChanged()
+    }
 
 
     override fun onCreateViewHolder(
@@ -70,7 +78,7 @@ class VocPractiseSettingsRecyclerViewAdapter(var statusTime:Boolean = false, var
                 mListener?.setOnItemClickListener(adapterPosition)
             }
             switch.setOnCheckedChangeListener { buttonView, isChecked ->
-                mListener?.setOnItemClickListener(adapterPosition)
+                mListener?.setOnItemClickListener(adapterPosition,isChecked)
             }
         }
 
@@ -78,7 +86,7 @@ class VocPractiseSettingsRecyclerViewAdapter(var statusTime:Boolean = false, var
 
     interface OnItemClickListener
     {
-        fun setOnItemClickListener(position: Int)
+        fun setOnItemClickListener(position: Int,checked:Boolean = false)
     }
 
     fun setOnItemClickListener(mListener:OnItemClickListener)

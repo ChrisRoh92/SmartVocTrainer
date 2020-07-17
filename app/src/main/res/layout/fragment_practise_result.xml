@@ -87,10 +87,10 @@
                         style="@style/Widget.MaterialComponents.Button.TextButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:text="Wiederholen"
+                        android:layout_marginStart="4dp"
+                        android:text="Neuen Test starten"
                         app:layout_constraintBottom_toBottomOf="@+id/fragment_result_btn_weiter"
-                        app:layout_constraintEnd_toStartOf="@+id/fragment_result_btn_weiter"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/fragment_result_btn_weiter" />
 
                     <androidx.recyclerview.widget.RecyclerView

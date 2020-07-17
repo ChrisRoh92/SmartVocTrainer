@@ -41,14 +41,11 @@ class MainRecyclerViewAdapter(var content:ArrayList<Book>):
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val book = content[position]
-        val progress = book.vocLearned
-
-
         holder.tvTitle.text = book.name
         holder.tvSubTitle.text = "Erstellt am: ${book.timeStamp}"
 
         // Progress:
-        holder.tvProgress.text = "$progress %"
+        holder.tvProgress.text = "${computeProgress(book.vocLearned,book.vocCount)} %"
 
         holder.tvVocs.text = "${book.vocCount}"
         holder.tvVocsOpen.text = "${book.vocUnLearned}"
@@ -81,6 +78,13 @@ class MainRecyclerViewAdapter(var content:ArrayList<Book>):
             notifyItemInserted(0)
         }
 
+    }
+
+    private fun computeProgress(learned:Int,total:Int):Int
+    {
+
+
+        return if(total > 0) ((learned.toFloat()/total)*100).roundToInt() else 0
     }
 
 

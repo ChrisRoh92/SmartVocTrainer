@@ -1,38 +1,27 @@
 package com.example.voctrainer.moduls.voc.fragment
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.graphics.Interpolator
-import android.opengl.Visibility
 import android.os.Bundle
-import android.transition.Fade
-import android.transition.Slide
-import android.transition.TransitionManager
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
 import com.example.voctrainer.R
+import com.example.voctrainer.backend.database.entities.Setting
+import com.example.voctrainer.moduls.default_elements.adapter.Simple2RecyclerViewAdapter
+import com.example.voctrainer.moduls.standard.dialogs.DialogStandardAlert
 import com.example.voctrainer.moduls.voc.adapter.VocPractiseResultRecyclerViewAdapter
-import com.example.voctrainer.moduls.voc.adapter.VocPractiseSettingsRecyclerViewAdapter
-import com.example.voctrainer.moduls.voc.dialogs.DialogVocPractiseItemCount
-import com.example.voctrainer.moduls.voc.dialogs.DialogVocPractiseSettingsMode
-import com.example.voctrainer.moduls.voc.dialogs.DialogVocPractiseTime
+import com.example.voctrainer.moduls.voc.dialogs.DialogVocPractiseSettings
 import com.example.voctrainer.moduls.voc.viewmodel.VocViewModel
 import com.example.voctrainer.moduls.voc.viewmodel.VocViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import java.lang.Exception
 
 
@@ -47,11 +36,16 @@ class VocPractiseFragment: Fragment()
 {
     // Allgemeine Variablen:
     private lateinit var rootView: View
+    private val TAG = "VocTrainer"
 
     // View Elemente:
     private lateinit var fabStart:FloatingActionButton
+    private lateinit var btnSettings:ImageButton
+    private lateinit var btnSort:ImageButton
+    private lateinit var btnFilter:ImageButton
 
-    // RecyclerView:
+
+    // RecyclerView for Practise Results::
     private lateinit var rvResults:RecyclerView
     private lateinit var managerResult:LinearLayoutManager
     private lateinit var adapterResult:VocPractiseResultRecyclerViewAdapter
@@ -59,27 +53,18 @@ class VocPractiseFragment: Fragment()
     // RecyclerView for Practise Settings:
     private lateinit var rvSettings:RecyclerView
     private lateinit var managerSettings:LinearLayoutManager
-    private lateinit var adapterSettings:VocPractiseSettingsRecyclerViewAdapter
-    private lateinit var btnSave:Button
-    private lateinit var btnAbortSave:Button
+    private lateinit var adapterSettings: Simple2RecyclerViewAdapter
+
 
     // ViewModel:
     private lateinit var vocViewModel: VocViewModel
     private lateinit var vocViewModelFactory: VocViewModelFactory
-    private var bookId:Long? = 0
+    private var bookId:Long = 0
+    private var currentSetting: Setting? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        bookId = arguments?.getLong("bookId",0)
-        try {
-            vocViewModelFactory = VocViewModelFactory(bookId!!,requireActivity().application)
-            vocViewModel = ViewModelProvider(requireParentFragment(),vocViewModelFactory).get(VocViewModel::class.java)
-            startObserver()
-        } catch (e: Exception)
-        {
-            e.printStackTrace()
 
-        }
 
 
 
@@ -91,6 +76,68 @@ class VocPractiseFragment: Fragment()
             adapterResult.setNewContent(ArrayList(tests))
             Log.e("VocTrainer","$tests")
         })
+
+
+
+        vocViewModel.getSettings()?.observe(viewLifecycleOwner, Observer { settings ->
+            if(!settings.isNullOrEmpty())
+            {
+                currentSetting = settings.last()
+                Log.d(TAG,"Anzahl Elemente in aktuellen Settings_List = ${settings.size}")
+                Log.d(TAG,"Aktuelles Setting: in aktuellen Settings_List = $currentSetting")
+
+                fun createSubTitles():ArrayList<String>
+                {
+
+                    fun calcTime():Array<Int>
+                    {
+                        var time = currentSetting!!.time
+                        var hour = 0
+                        var minute = 0
+                        var sec = 0
+
+                        hour = (time/3600.0).toInt()
+                        time -= hour*3600
+
+                        minute = (time/60.0).toInt()
+                        time -= minute*60
+
+                        sec = time.toInt()
+
+                        return arrayOf(hour,minute,sec)
+
+
+                    }
+                    val timeValues = calcTime()
+
+                    var values = ArrayList<String>()
+                    var time:String = if(currentSetting!!.timeMode) "Aktiviert" else "Deaktiviert"
+                    var practiseMode = arrayListOf("Nur Ungeübte Vokabeln","Nur Vokabeln in Übung","Ungeübte und in Übung","Alle Arten")
+                    var evaluation =if(currentSetting!!.practiseMod) "Sofort" else "Am Ende"
+                    var items = if(currentSetting!!.itemCount != -1) "${currentSetting!!.itemCount}" else "Alle Vokabeln"
+
+
+                    values.add("Ausgewählte Anzahl: $items")
+                    values.add("Status: $time")
+                    values.add("Eingestellte Zeit: ${timeValues[0]} Std. ${timeValues[1]} Min. ${timeValues[2]} Sek.")
+                    values.add("Übungsstatus Vokabeln: ${practiseMode[currentSetting!!.settingsMode]}")
+                    values.add("Bewertungszeitpunkt: $evaluation")
+
+
+                    return values
+                }
+
+
+                adapterSettings.updateSubContent(createSubTitles())
+            }
+            else
+            {
+
+                vocViewModel.createDefaultSettings()
+
+            }
+
+        })
     }
 
     override fun onCreateView(
@@ -99,89 +146,78 @@ class VocPractiseFragment: Fragment()
     ): View? {
         rootView =  inflater.inflate(R.layout.fragment_voc_practise, container, false)
 
+        initFabButton()
         initViews()
         initRecyclerView()
         initSettingsRecyclerView()
+
+        bookId = requireArguments()?.getLong("bookId",0)
+        try {
+            vocViewModelFactory = VocViewModelFactory(bookId!!,requireActivity().application)
+            vocViewModel = ViewModelProvider(requireParentFragment(),vocViewModelFactory).get(VocViewModel::class.java)
+            startObserver()
+        } catch (e: Exception)
+        {
+            e.printStackTrace()
+
+        }
+
         return rootView
     }
 
-    private fun initViews()
+    private fun initFabButton()
     {
         // FloatingActionButton:
         fabStart = rootView.findViewById(R.id.fragment_voc_practise_fab)
         fabStart.setOnClickListener {
-            //Aktuelle Settings hinzufügen...
-            //findNavController().navigate(R.id.action_global_nested_practise)
-        }
-        btnSave = rootView.findViewById(R.id.fragment_voc_practise_btn_save)
-        btnAbortSave = rootView.findViewById(R.id.fragment_voc_practise_btn_abort)
 
-        fun setButtonVisibility()
-        {
-            // TODO(): Animation einbauen
+            fun startNewPractiseTest()
+            {
+                var bundle = Bundle()
+                //Log.d("VocLearner","MainFragment - initAdapterister - adapter.setOnAdapterShowButtonClick: bookdId = $bookId")
+                bundle.putLong("bookID",vocViewModel.bookId)
+                bundle.putLong("settingsID",currentSetting!!.id)
+                Log.d(TAG,"VocPractiseFragment bookID ${vocViewModel.bookId} - settingsID $currentSetting")
+                findNavController().navigate(R.id.action_voc_practise,bundle)
+            }
 
+            // Prüfen ob Genug Vokabeln vorhanden sind:
+            if(vocViewModel.getVocs().value!!.isNullOrEmpty())
+            {
+                Toast.makeText(requireContext(),"Es sind noch keine Vokabeln eingetragen",Toast.LENGTH_SHORT).show()
+            }
 
-            /*btnSave.visibility = View.GONE
-            btnAbortSave.visibility = View.GONE*/
-
-
-
-            btnSave.animate()
-                .alpha(0.0f)
-                .translationY(-10f)
-                .setListener(object:Animator.AnimatorListener{
-                    override fun onAnimationRepeat(animation: Animator?) {
-
-                    }
-
-                    override fun onAnimationEnd(animation: Animator?) {
-                        btnSave.visibility = View.GONE
-                        btnSave.clearAnimation()
-                    }
-
-                    override fun onAnimationCancel(animation: Animator?) {
-
-                    }
-
-                    override fun onAnimationStart(animation: Animator?) {
-
+            else if(currentSetting!!.itemCount <= vocViewModel.getVocs().value!!.size)
+            {
+                startNewPractiseTest()
+            }
+            else
+            {
+                var dialog = DialogStandardAlert("Achtung, nicht genug Vokabeln verfügbar","Es wird stattdessen alle Vokabeln geprüft!")
+                dialog.show(parentFragmentManager,"")
+                dialog.setOnDialogClickListener(object: DialogStandardAlert.OnDialogClickListener{
+                    override fun setOnDialogClickListener() {
+                        startNewPractiseTest()
                     }
 
                 })
-                .setDuration(500)
-                .start()
+            }
 
-            btnAbortSave.animate()
-                .alpha(0.0f)
-                .translationY(-10f)
-                .setListener(object:Animator.AnimatorListener{
-                    override fun onAnimationRepeat(animation: Animator?) {
 
-                    }
-
-                    override fun onAnimationEnd(animation: Animator?) {
-                        btnAbortSave.visibility = View.GONE
-                        btnAbortSave.clearAnimation()
-                    }
-
-                    override fun onAnimationCancel(animation: Animator?) {
-
-                    }
-
-                    override fun onAnimationStart(animation: Animator?) {
-
-                    }
-
-                })
-                .setDuration(500)
-                .start()
 
         }
+    }
 
-        btnSave.setOnClickListener {
-            // TODO(): Speichern der Settings
-            setButtonVisibility() }
-        btnAbortSave.setOnClickListener { setButtonVisibility() }
+    private fun initViews()
+    {
+
+        // ImageButtons:
+        btnSettings = rootView.findViewById(R.id.fragment_voc_practise_btn_settings)
+        btnFilter = rootView.findViewById(R.id.fragment_voc_practise_btn_filter)
+        btnSort = rootView.findViewById(R.id.fragment_voc_practise_btn_sort)
+
+        btnSettings.setOnClickListener { startPractiseSettingsDialog() }
+
     }
 
     private fun initRecyclerView()
@@ -201,10 +237,12 @@ class VocPractiseFragment: Fragment()
             override fun setOnRepeatClickListener(pos: Int) {
                 // Einstellungen für Test nehmen
                 // TODO(): Schnittstelle in PRactise bereitstellen um PractiseSettings entgegen zu nehmen
-                findNavController().navigate(R.id.action_global_nested_practise)
+                // findNavController().navigate(R.id.action_voc_practise)
             }
 
         })
+
+
 
     }
 
@@ -213,147 +251,51 @@ class VocPractiseFragment: Fragment()
         // TODO() - Darf erst aufgerufen werden, wenn die aktuelle Settings verfügbar ist --> Observer
         rvSettings = rootView.findViewById(R.id.fragment_voc_practise_rv_settings)
         managerSettings = LinearLayoutManager(requireContext(),RecyclerView.VERTICAL,false)
-        adapterSettings = VocPractiseSettingsRecyclerViewAdapter()
+        // Data:
+        val titles:ArrayList<String> = arrayListOf(
+            "Anzahl Vokabeln",
+            "Mit Zeit Beschränkung",
+            "Zeit Beschränkung",
+            "Übungsstatus Vokabeln",
+            "Bewertung am Ende")
+
+
+        adapterSettings =
+            Simple2RecyclerViewAdapter(
+                titles,
+                ArrayList(List(titles.size) { "" }))
         rvSettings.setHasFixedSize(true)
         rvSettings.layoutManager = managerSettings
         rvSettings.adapter = adapterSettings
-        adapterSettings.setOnItemClickListener(object:VocPractiseSettingsRecyclerViewAdapter.OnItemClickListener{
-            override fun setOnItemClickListener(position: Int)
-            {
-                startSettingsDialog(position)
 
+
+        adapterSettings.setOnItemClickListener(object :Simple2RecyclerViewAdapter.OnItemClickListener{
+            override fun setOnItemClickListener(pos: Int) {
+                startPractiseSettingsDialog()
+            }
+
+        })
+
+        rvSettings.setOnClickListener {  }
+
+
+    }
+
+
+    private fun startPractiseSettingsDialog()
+    {
+        Log.d(TAG,"Current BookID = ${vocViewModel.getBookID()}")
+        val dialog = DialogVocPractiseSettings(currentSetting!!)
+        dialog.show(childFragmentManager,"Set the new Settings:")
+        dialog.OnDialogClickListener(object:DialogVocPractiseSettings.OnDialogClickListener{
+            override fun setOnDialogClickListener(newSetting: Setting) {
+                vocViewModel.onAddNewSetting(newSetting)
+                Log.d(TAG,"VocPracticeFragment - new Settings = $newSetting")
             }
 
         })
     }
 
-    // Methode ruft je nach Position ein Dialog auf:
-    private fun startSettingsDialog(position:Int)
-    {
-
-        
-        if(position == 0)
-        {
-            // Anzahl Vokabeln festlegen:
-            // TODO(), hier kommt die Zahl aus der aktuellen Settings vom ViewModel rein....
-            var dialog = DialogVocPractiseItemCount(-1)
-            dialog.show(parentFragmentManager,"ItemCount")
-            dialog.setOnItemCountClickListener(object:DialogVocPractiseItemCount.OnItemCountClickListener{
-                override fun setOnItemCountClickListener(itemCount: Int) {
-
-                    showButtonsToSave()
-                }
-
-            })
-
-        }
-        else if(position == 1)
-        {
-            showButtonsToSave()
-        }
-        else if (position == 2)
-        {
-            // Zeit festlegen:
-            var dialog = DialogVocPractiseTime()
-            dialog.show(parentFragmentManager,"Time")
-            dialog.setOnTimeClickListener(object:DialogVocPractiseTime.OnTimeClickListener{
-                override fun setOnTimeClickListener(hour: Int, minute: Int, second: Int) {
-                    showButtonsToSave()
-                }
-
-            })
-        }
-        else if(position == 3)
-        {
-            // SettingsMode (Direkt bewerten oder am Ende) festlegen:
-            var dialog = DialogVocPractiseSettingsMode()
-            dialog.show(parentFragmentManager,"SettingsMode")
-            dialog.setOnSettingsModeClickListener(object:DialogVocPractiseSettingsMode.OnSettingsModeClickListener{
-                override fun setOnSettingsModeClickListener(settingsMode: Int) {
-                    showButtonsToSave()
-                }
-
-            })
-
-        }
-        else
-        {
-            showButtonsToSave()
-        }
-    }
-
-    private fun showButtonsToSave()
-    {
-        /*val snackbar = Snackbar
-//                .make(rootView,"Neue Einstellungen speichern?",Snackbar.LENGTH_INDEFINITE)
-//                .setAction("Speichern"){
-//                    Toast.makeText(requireContext(),"Änderungen gespeichert",Toast.LENGTH_SHORT).show()
-//                }
-//
-//            snackbar.show()
-        val viewpager = requireParentFragment().view?.findViewById<ViewPager2>(R.id.fragment_vocs_viewpager2)
-        viewpager.on*/
-        // TODO(): Animation einbauen
-        if(btnSave.visibility != View.VISIBLE)
-        {
-            btnSave.animate()
-                .alpha(1.0f)
-                .scaleY(1f)
-                .setListener(object:Animator.AnimatorListener{
-                    override fun onAnimationRepeat(animation: Animator?) {
-
-                    }
-
-                    override fun onAnimationEnd(animation: Animator?) {
-                        btnSave.visibility = View.VISIBLE
-                        btnSave.clearAnimation()
-                    }
-
-                    override fun onAnimationCancel(animation: Animator?) {
-
-                    }
-
-                    override fun onAnimationStart(animation: Animator?) {
-                        btnSave.visibility = View.VISIBLE
-                        btnSave.scaleY = 0f
-
-                    }
-
-                })
-                .setStartDelay(200)
-                .setDuration(500)
-                .start()
-
-            btnAbortSave.animate()
-                .alpha(1.0f)
-                .scaleY(1f)
-                .setListener(object:Animator.AnimatorListener{
-                    override fun onAnimationRepeat(animation: Animator?) {
-
-                    }
-
-                    override fun onAnimationEnd(animation: Animator?) {
-                        btnAbortSave.visibility = View.VISIBLE
-                        btnAbortSave.clearAnimation()
-                    }
-
-                    override fun onAnimationCancel(animation: Animator?) {
-
-                    }
-
-                    override fun onAnimationStart(animation: Animator?) {
-                        btnAbortSave.visibility = View.VISIBLE
-                        btnAbortSave.scaleY = 0f
-                    }
-
-                })
-                .setStartDelay(200)
-                .setDuration(500)
-                .start()
-        }
-
-
-    }
 
 
 }

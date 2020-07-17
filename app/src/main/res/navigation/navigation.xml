@@ -18,7 +18,8 @@
             app:destination="@id/settingsFragment" />
         <action
             android:id="@+id/action_test_csv"
-            app:destination="@id/CSVImportFragment" />
+            app:destination="@id/CSVImportFragment"
+            app:popUpTo="@id/mainFragment" />
     </fragment>
     <fragment
         android:id="@+id/vocFragment"
@@ -37,6 +38,13 @@
         <action
             android:id="@+id/action_voc_csvimport"
             app:destination="@id/CSVImportFragment" />
+        <action
+            android:id="@+id/action_voc_practise"
+            app:destination="@id/nested_practise" />
+        <argument
+            android:name="posViewPager"
+            app:argType="integer"
+            android:defaultValue="-1" />
     </fragment>
     <navigation
         android:id="@+id/nested_practise"
@@ -55,6 +63,14 @@
                 app:popExitAnim="@anim/pop_out"
                 app:popUpTo="@id/practiseFragment"
                 app:popUpToInclusive="true" />
+            <argument
+                android:name="bookID"
+                app:argType="long"
+                android:defaultValue="-1L" />
+            <argument
+                android:name="settingsID"
+                app:argType="long"
+                android:defaultValue="-1L" />
         </fragment>
         <fragment
             android:id="@+id/practiseResultFragment"
@@ -63,7 +79,8 @@
             tools:layout="@layout/fragment_practise_result">
             <action
                 android:id="@+id/action_result_voc"
-                app:destination="@id/vocFragment" />
+                app:destination="@id/vocFragment"
+                app:popUpTo="@id/practiseResultFragment" />
             <action
                 android:id="@+id/action_result_practise"
                 app:destination="@id/practiseFragment"
@@ -73,16 +90,17 @@
                 app:popExitAnim="@anim/pop_out"
                 app:popUpTo="@id/practiseResultFragment"
                 app:popUpToInclusive="true" />
+            <argument
+                android:name="bookID"
+                app:argType="long"
+                android:defaultValue="-1L" />
+            <argument
+                android:name="testID"
+                app:argType="long"
+                android:defaultValue="-1L" />
         </fragment>
         <action android:id="@+id/action_global_result" app:destination="@id/practiseResultFragment" />
     </navigation>
-    <action
-        android:id="@+id/action_global_nested_practise"
-        app:destination="@id/nested_practise"
-        app:enterAnim="@anim/slide_in"
-        app:exitAnim="@anim/slide_out"
-        app:popEnterAnim="@anim/pop_in"
-        app:popExitAnim="@anim/pop_out" />
     <action android:id="@+id/action_global_voc" app:destination="@id/vocFragment" />
     <fragment
         android:id="@+id/introFragment"
@@ -130,6 +148,11 @@
             android:id="@+id/action_csvimport_vocfragment"
             app:destination="@id/vocFragment"
             app:popUpTo="@id/vocFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_csvimport_main"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/mainFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment

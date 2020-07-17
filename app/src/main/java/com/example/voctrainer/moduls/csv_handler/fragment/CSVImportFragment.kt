@@ -22,12 +22,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.voctrainer.MainActivity
 import com.example.voctrainer.R
 import com.example.voctrainer.moduls.csv_handler.CSVImportProcessor
 import com.example.voctrainer.moduls.csv_handler.adapter.CSVImportRecyclerViewAdapter
 import com.example.voctrainer.moduls.csv_handler.dialog.DialogChangeImportItem
 import com.example.voctrainer.moduls.csv_handler.dialog.DialogImportError
 import com.example.voctrainer.moduls.csv_handler.dialog.DialogLoading
+import com.example.voctrainer.moduls.csv_handler.dialog.DialogSetBook
 import com.example.voctrainer.moduls.csv_handler.viewholder.CSVViewModel
 import com.example.voctrainer.moduls.main.helper.LocalVoc
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -40,6 +42,7 @@ import java.util.jar.Manifest
 class CSVImportFragment(): Fragment()
 {
     // Allgemeine Variablen:
+    private val TAG = "VocTrainer"
     private lateinit var rootView:View
     private lateinit var viewModel: CSVViewModel
 
@@ -51,12 +54,6 @@ class CSVImportFragment(): Fragment()
     /*private lateinit var fbtn:FloatingActionButton*/
     private lateinit var toolbar: Toolbar
 
-    /*// View Elemente vom Vokabelheft:
-    private lateinit var etVoc:EditText
-    private lateinit var spinner:Spinner
-    private lateinit var rbtnGroup:RadioGroup
-    private lateinit var rbtnNew:RadioButton
-    private lateinit var rbtnOld:RadioButton*/
 
     // Vokabelliste View Elemente
     // Buttons:
@@ -71,6 +68,8 @@ class CSVImportFragment(): Fragment()
 
     // BookID:
     private var bookID = -1L
+    private var allBookIDs:ArrayList<Long> = ArrayList()
+    private var allBooks:ArrayList<String> = ArrayList()
 
 
     // Item Interaction:
@@ -83,13 +82,45 @@ class CSVImportFragment(): Fragment()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         rootView =  inflater.inflate(R.layout.fragment_csv_import, container, false)
-        // Start ViewModel
-        // Warten Dialog:
+
 
         initToolBar()
         initVocView()
         initButton()
+        initViewModelWithObservers()
 
+
+        // Check for Permissions for Storage!
+        if(storagePermission())
+        {
+            dialog.show(parentFragmentManager,"Waiting")
+            loadData()
+        }
+        else
+        {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                PERMISSION_STORAGE,
+                REQUEST_EXTERNAL_STORAGE
+            )
+        }
+
+
+        // Handle the OnBackButtonPress!
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+
+                returnToParentFragment()
+            }
+
+        })
+
+        return rootView
+    }
+
+    // Init the ViewModel and register Observers!
+    private fun initViewModelWithObservers()
+    {
         viewModel = ViewModelProvider(this).get(CSVViewModel::class.java)
         viewModel.getContentData().observe(viewLifecycleOwner, Observer {
             Log.d("VocTrainer","Aktuelle Zeit viewModel.getContentData().observe = ${System.currentTimeMillis()}")
@@ -105,88 +136,16 @@ class CSVImportFragment(): Fragment()
 
             })
         })
-
-
-
-
-        // Check for Permissions:
-        if(storagePermission())
-        {
-            dialog.show(parentFragmentManager,"Waiting")
-            loadData()
-        }
-        else
-        {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                PERMISSION_STORAGE,
-                REQUEST_EXTERNAL_STORAGE
-            )
-        }
-
-        // BookID aus dem Bundle lesen....
-        try {
-            bookID = requireArguments().getLong("bookID")
-            viewModel.setBookID(bookID)
-        } catch (e:Exception)
-        {
-            Log.e("VocTrainer","Failed to load the bookID",e)
-        }
-
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,object: OnBackPressedCallback(true){
-            override fun handleOnBackPressed() {
-                returnToParentFragment()
+        viewModel.getBooks().observe(viewLifecycleOwner, Observer { books ->
+            for(i in books)
+            {
+                allBookIDs.add(i.id)
+                allBooks.add(i.name)
             }
-
         })
-
-        return rootView
     }
 
-    private fun loadData()
-    {
-
-        try {
-            var uri = requireArguments().getString("uri")
-            Log.d("VocTrainer","Uri from Argument = $uri")
-            viewModel.setNewData(uri!!.toUri())
-
-
-
-        } catch (e:Exception)
-        {
-            e.printStackTrace()
-            Log.e("VocTrainer","Fehler beim Auslesen von intent",e)
-        }
-    }
-
-    private fun storagePermission():Boolean
-    {
-        var readPermission = ActivityCompat.checkSelfPermission(requireContext(),android.Manifest.permission.READ_EXTERNAL_STORAGE)
-        var writePermission = ActivityCompat.checkSelfPermission(requireContext(),android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
-        return (readPermission == PackageManager.PERMISSION_GRANTED && writePermission  == PackageManager.PERMISSION_GRANTED)
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode == REQUEST_EXTERNAL_STORAGE)
-        {
-            if(storagePermission())
-            {
-                dialog.show(parentFragmentManager,"Waiting")
-                loadData()
-            }
-            else
-            {
-                Toast.makeText(requireContext(),"Sie haben die Permission für den Datenzugriff verweigert!",Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
+    // Init the Toolbar with functions!
     private fun initToolBar()
     {
         toolbar = rootView.findViewById(R.id.fragment_csv_import_toolbar)
@@ -195,22 +154,47 @@ class CSVImportFragment(): Fragment()
         }
     }
 
+    // Init the Buttons
     private fun initButton()
     {
         btnSave = rootView.findViewById(R.id.fragment_csv_btn_save)
         btnAbort = rootView.findViewById(R.id.fragment_csv_btn_abort)
 
         btnSave.setOnClickListener {
-
+            // Check if the size of the imported list, is to big
             if(adapter.vocs.size <= 1000)
             {
                 dialog.show(parentFragmentManager,"Loading To DataBase")
-                viewModel.saveLocalVocToDataBase()
-                viewModel.getImportComplete().observe(viewLifecycleOwner, Observer {
+                // Check if Class holds the id of the book
+                Log.d(TAG,"BookID = $bookID")
+                if(bookID == -1L)
+                {
                     dialog.dismiss()
-                    returnToParentFragment()
-                    Toast.makeText(requireContext(),"Import komplett",Toast.LENGTH_SHORT).show()
-                })
+                    val dialogSetBook = DialogSetBook(allBooks,allBookIDs)
+                    dialogSetBook.show(childFragmentManager,"Set the Book ID")
+                    dialogSetBook.setOnChooseListener(object:DialogSetBook.OnChooseListener{
+                        override fun setOnChooseListener(id: Long) {
+                            viewModel.setBookID(id)
+                            viewModel.saveLocalVocToDataBase()
+                            viewModel.getImportComplete().observe(viewLifecycleOwner, Observer {
+                                dialog.dismiss()
+                                returnToParentFragment()
+                                Toast.makeText(requireContext(),"Import komplett",Toast.LENGTH_SHORT).show()
+                            })
+                        }
+
+                    })
+                }
+                else
+                {
+                    viewModel.saveLocalVocToDataBase()
+                    viewModel.getImportComplete().observe(viewLifecycleOwner, Observer {
+                        dialog.dismiss()
+                        returnToParentFragment()
+                        Toast.makeText(requireContext(),"Import komplett",Toast.LENGTH_SHORT).show()
+                    })
+                }
+
             }
             else
             {
@@ -238,12 +222,14 @@ class CSVImportFragment(): Fragment()
 
 
         }
-        btnAbort.setOnClickListener { returnToParentFragment() }
+        btnAbort.setOnClickListener {
+            val dialogSetBook = DialogSetBook(allBooks,allBookIDs)
+            dialogSetBook.show(childFragmentManager,"Set the Book ID")
+            //returnToParentFragment()
+            }
     }
 
-
-
-
+    // Init the View to display and manipulate the vocs:
     private fun initVocView()
     {
         // RecyclerView:
@@ -287,15 +273,77 @@ class CSVImportFragment(): Fragment()
 
     }
 
+    // Try to Load the Data (From Arguments):
+    private fun loadData()
+    {
+
+        try {
+            var uri = requireArguments().getString("uri")
+            Log.d("VocTrainer","Uri from Argument = $uri")
+            viewModel.setNewData(uri!!.toUri())
+            bookID = requireArguments().getLong("bookID",-1)
+            viewModel.setBookID(bookID)
+        } catch (e:Exception)
+        {
+            e.printStackTrace()
+            Log.e("VocTrainer","Fehler beim Auslesen von intent",e)
+        }
+    }
+
+    // Check for StoragePermission!
+    private fun storagePermission():Boolean
+    {
+        var readPermission = ActivityCompat.checkSelfPermission(requireContext(),android.Manifest.permission.READ_EXTERNAL_STORAGE)
+        var writePermission = ActivityCompat.checkSelfPermission(requireContext(),android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+        return (readPermission == PackageManager.PERMISSION_GRANTED && writePermission  == PackageManager.PERMISSION_GRANTED)
+    }
+
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == REQUEST_EXTERNAL_STORAGE)
+        {
+            if(storagePermission())
+            {
+                dialog.show(parentFragmentManager,"Waiting")
+                loadData()
+            }
+            else
+            {
+                Toast.makeText(requireContext(),"Sie haben die Permission für den Datenzugriff verweigert!",Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
 
     // Methode aufrufen, um wieder zurück zu den VocFragments zu gelangen....
     private fun returnToParentFragment()
     {
-        val bundle = Bundle()
-        bundle.putLong("bookId",bookID!!)
-        findNavController().navigate(R.id.action_csvimport_vocfragment,bundle)
+        val backStack = childFragmentManager.backStackEntryCount
+        if(backStack == 0)
+        {
+
+            findNavController().navigateUp()
+
+        }
+        else
+        {
+            val bundle = Bundle()
+            bundle.putLong("bookId",bookID!!)
+            findNavController().navigate(R.id.action_csvimport_vocfragment,bundle)
+        }
+
+
+
+
     }
 
+    // Undo the Delete Action
     private fun undoDeleteAction(voc:LocalVoc,position:Int)
     {
         // StartSnackbar
@@ -306,78 +354,6 @@ class CSVImportFragment(): Fragment()
                 viewModel.undoDeleteLocalVoc(voc,position)
             }.show()
     }
-
-
-
-
-
-
-    // Archiv Stuff:
-    /*
-    private fun initViews()
-    {
-        // Vokabelheft erstellen oder aussuchen:
-        etVoc = rootView.findViewById(R.id.fragment_csv_import_et)
-        spinner = rootView.findViewById(R.id.fragment_csv_import_spinner)
-        rbtnGroup = rootView.findViewById(R.id.fragment_csv_import_rbtn_group)
-        rbtnNew = rootView.findViewById(R.id.fragment_csv_import_rbtn_new)
-        rbtnOld = rootView.findViewById(R.id.fragment_csv_import_rbtn_old)
-
-        spinner.isEnabled = false
-        etVoc.isEnabled = false
-
-        // Testing Listener for rbtnGroup:
-        rbtnGroup.setOnCheckedChangeListener { group, checkedId ->
-            if(checkedId == R.id.fragment_csv_import_rbtn_new)
-            {
-                // Neuer Button ist geklickt
-                Snackbar.make(rootView,"Neuer Button wurde ausgewählt",Snackbar.LENGTH_SHORT).show()
-                spinner.isEnabled = false
-                etVoc.isEnabled = true
-            }
-            else
-            {
-                Snackbar.make(rootView,"Alter Button wurde ausgewählt",Snackbar.LENGTH_SHORT).show()
-                spinner.isEnabled = true
-                etVoc.isEnabled = false
-            }
-        }
-
-        // Spinner:
-        /*// TODO() - Liste mit Vokabelheften aus dem ViewModel beladen...
-        var content = arrayListOf("","Englisch - 01","Englisch - 02","Englisch - 03","Englisch - 04","Englisch - 05",
-            "Spanisch - 01","Spanisch - 02","Spanisch - 03","Spanisch - 04","Spanisch - 05")
-        var aAdapter = ArrayAdapter<String>(rootView.context,android.R.layout.simple_spinner_dropdown_item,content)
-        spinner.adapter = aAdapter
-        spinner.onItemSelectedListener = object:AdapterView.OnItemSelectedListener{
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-
-            }
-
-            override fun onItemSelected(parent: AdapterView<*>?,view: View?,position: Int,id: Long)
-            {
-                Snackbar.make(rootView,"${content[position]} was selected",Snackbar.LENGTH_SHORT).show()
-            }
-
-        }*/
-
-
-        // FloatingActionButton:
-        fbtn = rootView.findViewById(R.id.fragment_csv_import_fbtn)
-        fbtn.setOnClickListener {
-            // Prüfen ob alle Eingaben da sind (Welches Vokabelheft usw...)
-            // Vokabeln in das ausgesuchte Vokabelheft eintragen
-            Snackbar.make(rootView,"Vokabeln wurden importiert...",Snackbar.LENGTH_SHORT).show()
-            findNavController().navigate(R.id.action_csvimport_main)
-        }
-
-
-
-    }
-    */
-
-
 
 
 

@@ -42,6 +42,9 @@ import kotlin.random.Random
 - TODO() Import von Vokabelheften muss implementiert werden
 - TODO() Teilen von Vokabelheften muss implementiert werden
 - TODO() Direktes Üben mit bookId starten, muss noch implementiert werden
+- TODO() Alle zugehörigen Daten eines Vokabelheftes mitlöschen (Alle Vokabeln, Settings etc.)
+* *
+*
 
 ******************************************************************
  */
@@ -82,7 +85,6 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
 
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.books.observe(viewLifecycleOwner, Observer { books ->
-            //adapter.submitList(books)
             adapter.updateContent(ArrayList(books),deletePosition,adapterAction)
             if (adapterAction == 2)
             {

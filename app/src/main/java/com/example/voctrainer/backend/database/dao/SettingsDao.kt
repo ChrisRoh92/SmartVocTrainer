@@ -27,10 +27,10 @@ interface SettingsDao
     fun updateAll(settings: List<Setting>)
 
     // Liste erhalten:
-    @Query("SELECT * FROM setting WHERE ID == :bookID")
+    @Query("SELECT * FROM setting WHERE bookId == :bookID")
     fun getSettings(bookID:Long):LiveData<List<Setting>>
 
-    @Query("SELECT * FROM setting WHERE ID == :bookID")
+    @Query("SELECT * FROM setting WHERE bookId == :bookID")
     fun getOfflineSettings(bookID:Long):List<Setting>
 
     // Settings by ID:

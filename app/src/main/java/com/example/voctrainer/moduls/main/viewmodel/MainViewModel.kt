@@ -28,6 +28,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application)
     // Alle Bücher:
     var books:MutableLiveData<List<Book>> = MutableLiveData()
 
+
     init {
         uiScope.launch {
             withContext(Dispatchers.IO)
@@ -37,6 +38,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application)
 
         }
     }
+
+
+
 
 
 

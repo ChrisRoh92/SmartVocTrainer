@@ -34,7 +34,16 @@
 
     <style name="MainTextViewStyle">
         <item name="android:textColor">@color/text_main</item>
+        <item name="android:textSize">22sp</item>
     </style>
+
+    <style name="SubMainTextViewStyle">
+        <item name="android:textColor">@color/text_sub</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+
+
 
 
 

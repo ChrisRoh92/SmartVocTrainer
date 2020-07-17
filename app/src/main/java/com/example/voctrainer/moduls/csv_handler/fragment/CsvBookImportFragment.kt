@@ -11,12 +11,19 @@ import com.example.voctrainer.R
 
 class CsvBookImportFragment : Fragment() {
 
+    // Allgemeine Sachen:
+    private lateinit var rootView:View
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_csv_book_import, container, false)
+        rootView =  inflater.inflate(R.layout.fragment_csv_book_import, container, false)
+
+
+
+        return rootView
     }
 
 }

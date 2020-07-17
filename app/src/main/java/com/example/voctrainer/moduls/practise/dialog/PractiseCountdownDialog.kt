@@ -13,10 +13,11 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.example.voctrainer.R
 import kotlinx.coroutines.*
 
-class PractiseCountdownDialog(): DialogFragment()
+class PractiseCountdownDialog(var duration:Int): DialogFragment()
 {
     // Allgemeine Variablen:
     private lateinit var dialogView: View
+    private lateinit var mListener:OnReadyListener
 
     // View Elemente:
     private lateinit var tvCountdown:TextView
@@ -44,7 +45,7 @@ class PractiseCountdownDialog(): DialogFragment()
     private fun initView()
     {
         tvCountdown = dialogView.findViewById(R.id.dialog_practise_countdown_tv)
-        tvCountdown.text = "5"
+        tvCountdown.text = "$duration"
 
     }
 
@@ -53,17 +54,18 @@ class PractiseCountdownDialog(): DialogFragment()
         uiScope.launch {
             delay(1000)
 
-            for(i in 0..4)
+            for(i in 0 until duration)
             {
                 var before = System.currentTimeMillis()
-                var input = if(i != 4) "${5-(i+1)}" else "Start"
+                var input = if(i < duration-1) "${duration-(i+1)}" else "Engage"
                 setNewNumber(input) {
                     // Ensure the Animation is over!
                 }
                 delay(1000-(System.currentTimeMillis()-before))
             }
             delay(200)
-            dismiss()
+            mListener?.setOnReadyListener()
+
         }
     }
 
@@ -122,6 +124,16 @@ class PractiseCountdownDialog(): DialogFragment()
                 .start()
 
         }
+
+    interface OnReadyListener
+    {
+        fun setOnReadyListener()
+    }
+
+    fun setOnReadyListener(mListener:OnReadyListener)
+    {
+        this.mListener = mListener
+    }
 
 
 
