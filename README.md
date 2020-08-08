@@ -7,7 +7,7 @@ Nutzer sind so deutlich flexibler und können die App nutzen, ohne das Datenvolu
 SmartVocTrainer befindet sich aktuell noch in der Entwicklung und wird voraussichtlich bis Ende 2020 releasefähig sein
 
 Bisher sind folgende Features geplant (Stand 08/2020):
-- Import von Vokabeln über CSV-Dateien
+- Import und Export von Vokabeln über CSV-Dateien
 - Umfangreicher Übungsmodus
 - Erinnerungsfunktion zum Üben
 - Teilen von Vokabellisten mit Freunden und Kollegen
